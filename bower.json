@@ -1,0 +1,10 @@
+{
+  "name": "template-loader",
+  "description": "Template Loader / mframe parser",
+  "main": "template-loader.js",
+  "authors": [
+    "Vladimir Ciobanu"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/VisualSolutions/template-loader"
+}

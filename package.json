@@ -1,0 +1,19 @@
+{
+  "name": "template-loader",
+  "version": "1.0.0",
+  "description": "Template Loader / mframe parser",
+  "main": "template-loader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VisualSolutions/template-loader.git"
+  },
+  "author": "Vladimir Ciobanu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VisualSolutions/template-loader/issues"
+  },
+  "homepage": "https://github.com/VisualSolutions/template-loader#readme"
+}
