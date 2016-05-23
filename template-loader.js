@@ -63,6 +63,6 @@
         }
     };
 
-    window.onload = getMframeContent();
+    window.onload = getMframeContent;
 
 })();
