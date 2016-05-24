@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/VisualSolutions/template-loader/issues"
   },
-  "homepage": "https://github.com/VisualSolutions/template-loader#readme"
+  "homepage": "https://github.com/VisualSolutions/template-loader#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^2.13.4",
+    "merge2": "^1.0.2"
+  }
 }

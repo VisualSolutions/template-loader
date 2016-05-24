@@ -1,0 +1,15 @@
+<html>
+
+<body>
+    <script src="js/template-loader.js"></script>
+    <script>
+        var x = new window.Loader(function(data) {
+            console.log(data);
+        });
+        x.ready();
+        x.error('reason');
+        x.finished();
+    </script>
+</body>
+
+</html>

@@ -1,7 +1,7 @@
 {
   "name": "template-loader",
   "description": "Template Loader / mframe parser",
-  "main": "template-loader.js",
+  "main": "release/js/template-loader.js",
   "authors": [
     "Vladimir Ciobanu"
   ],

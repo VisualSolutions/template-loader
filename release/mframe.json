@@ -1,0 +1,1462 @@
+{
+	"components": [{
+		"type": 0,
+		"componentId": 0,
+		"path": "title",
+		"labels": [{
+			"value": "Title",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "t",
+			"value": "Testing",
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	},
+	{
+		"type": 0,
+		"componentId": 1,
+		"path": "details",
+		"labels": [{
+			"value": "Details",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "5AM - 9PM",
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	},
+	{
+		"type": 1,
+		"componentId": 2,
+		"path": "image",
+		"labels": [{
+			"value": "Image",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "img/bg.jpg",
+			"position": {
+				"value": "fit",
+				"locked": true
+			}
+		},
+		"styles": {
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"transform": {
+				"name": "Rotation",
+				"locked": false,
+				"value": 0,
+				"cssProperty": "transform"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"locked": false,
+				"value": "#fff",
+				"cssProperty": "backgroundColor"
+			}
+		}
+	},
+	{
+		"type": 1,
+		"componentId": 3,
+		"path": "image",
+		"labels": [{
+			"value": "Image",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "img/logo.png",
+			"position": {
+				"value": "fit",
+				"locked": true
+			}
+		},
+		"styles": {
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"transform": {
+				"name": "Rotation",
+				"locked": false,
+				"value": 0,
+				"cssProperty": "transform"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"locked": false,
+				"value": "#fff",
+				"cssProperty": "backgroundColor"
+			}
+		}
+	},
+		{
+		"type": 1,
+		"componentId": 4,
+		"path": "image",
+		"labels": [{
+			"value": "Image",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "img/logo_boarshead.png",
+			"position": {
+				"value": "fit",
+				"locked": true
+			}
+		},
+		"styles": {
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"transform": {
+				"name": "Rotation",
+				"locked": false,
+				"value": 0,
+				"cssProperty": "transform"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"locked": false,
+				"value": "#fff",
+				"cssProperty": "backgroundColor"
+			}
+		}
+	},
+
+		{
+		"type": 1,
+		"componentId": 5,
+		"path": "image",
+		"labels": [{
+			"value": "Image",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "img/icon_pindrop.png",
+			"position": {
+				"value": "fit",
+				"locked": true
+			}
+		},
+		"styles": {
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"transform": {
+				"name": "Rotation",
+				"locked": false,
+				"value": 0,
+				"cssProperty": "transform"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"locked": false,
+				"value": "#fff",
+				"cssProperty": "backgroundColor"
+			}
+		}
+	},
+		{
+		"type": 1,
+		"componentId": 6,
+		"path": "image",
+		"labels": [{
+			"value": "Image",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "img/icon_twitter.png",
+			"position": {
+				"value": "fit",
+				"locked": true
+			}
+		},
+		"styles": {
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"transform": {
+				"name": "Rotation",
+				"locked": false,
+				"value": 0,
+				"cssProperty": "transform"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"locked": false,
+				"value": "#fff",
+				"cssProperty": "backgroundColor"
+			}
+		}
+	},
+
+		{
+		"type": 1,
+		"componentId": 7,
+		"path": "image",
+		"labels": [{
+			"value": "Image",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "img/icon_fb.png",
+			"position": {
+				"value": "fit",
+				"locked": true
+			}
+		},
+		"styles": {
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"transform": {
+				"name": "Rotation",
+				"locked": false,
+				"value": 0,
+				"cssProperty": "transform"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"locked": false,
+				"value": "#fff",
+				"cssProperty": "backgroundColor"
+			}
+		}
+	},
+	{
+		"type": 0,
+		"componentId": 8,
+		"path": "details",
+		"labels": [{
+			"value": "Details",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "BAYCOFFEEANDTEA.NET",
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	},
+	{
+		"type": 0,
+		"componentId": 9,
+		"path": "details",
+		"labels": [{
+			"value": "Details",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "TWITTER.COM/BAYCOFFEEANDTEA",
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	},
+	{
+		"type": 0,
+		"componentId": 10,
+		"path": "details",
+		"labels": [{
+			"value": "Details",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "FACEBOOK.COM/BAYCOFFEETEATPA",
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	},
+	{
+		"type": 0,
+		"componentId": 11,
+		"path": "details",
+		"labels": [{
+			"value": "Details",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": [{"value":"Egg & Cheese Sandwich"},{"value":"Made to Order Sandwiches"},{"value":"Hot Sandwiches"}],
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	},
+	{
+		"type": 0,
+		"componentId": 12,
+		"path": "details",
+		"labels": [{
+			"value": "Details",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": [{"value":"Egg & Cheese Sandwich"},{"value":"Bacon, Egg & Cheese Sandwich"},{"value":"Smoked Turkey, Egg, & Cheese"},{"value":"Sausage, Egg, & Cheese"},{"value":"Ham, Egg, & Cheese"}],
+			"value2": [{"value":"2.59"},{"value":"4.99"},{"value":"3.69"},{"value":"1.69"},{"value":"3.89"}],
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	},
+		{
+		"type": 1,
+		"componentId": 13,
+		"path": "image",
+		"labels": [{
+			"value": "Image",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": "img/header_line.png",
+			"position": {
+				"value": "fit",
+				"locked": true
+			}
+		},
+		"styles": {
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"transform": {
+				"name": "Rotation",
+				"locked": false,
+				"value": 0,
+				"cssProperty": "transform"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"locked": false,
+				"value": "#fff",
+				"cssProperty": "backgroundColor"
+			}
+		}
+	},
+	{
+		"type": 0,
+		"componentId": 14,
+		"path": "details",
+		"labels": [{
+			"value": "Details",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": [{"value":"Ham & Cheese Sandwich"},{"value":"Turkey Sandwich"},{"value":"Smoked Turkey Wrap"},{"value":"Chicken Salad Sandwich"}],
+			"value2": [{"value":"3.99"},{"value":"4.99"},{"value":"2.89"},{"value":"3.89"}],
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	},
+	{
+		"type": 0,
+		"componentId": 15,
+		"path": "details",
+		"labels": [{
+			"value": "Details",
+			"lang": "",
+			"tooltip": ""
+		}],
+		"params": {
+			"locked": false,
+			"default": "",
+			"value": [{"value":"Cuban"},{"value":"Hot Corned Beef"},{"value":"Corned Beef Rueben"}],
+			"value2": [{"value":"1.99"},{"value":"2.99"},{"value":"3.99"}],
+			"maxCharacters": 0,
+			"fontMin": 0,
+			"fontMax": 0,
+			"blacklist": {
+				"words": [],
+				"master": false
+			}
+		},
+		"styles": {
+			"fontFamily": {
+				"name": "Font",
+				"options": [{
+					"name": ""
+				}],
+				"value": "",
+				"locked": false,
+				"cssProperty": "fontFamily"
+			},
+			"whiteSpace": {
+				"name": "Text Wrapping",
+				"options": ["normal",
+				"nowrap"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "whiteSpace"
+			},
+			"textColor": {
+				"name": "Font Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#000",
+				"locked": false,
+				"cssProperty": "color"
+			},
+			"verticalAlign": {
+				"name": "Vertical Alignment",
+				"options": ["top",
+				"bottom",
+				"middle",
+				"baseline"],
+				"value": "baseline",
+				"cssProperty": "verticalAlign"
+			},
+			"backgroundColor": {
+				"name": "Background Color",
+				"options": [{
+					"hexString": "#fff"
+				}],
+				"value": "#fff",
+				"locked": false,
+				"cssProperty": "backgroundColor"
+			},
+			"textAlignment": {
+				"name": "Text Alignment",
+				"options": ["left",
+				"center",
+				"right",
+				"justify"],
+				"value": "left",
+				"locked": false,
+				"cssProperty": "textAlign"
+			},
+			"bold": {
+				"name": "Bold",
+				"options": ["normal",
+				"bold"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontWeight"
+			},
+			"textDecoration": {
+				"name": "Text Decoration",
+				"options": ["underline",
+				"line-through",
+				"underline line-through",
+				"none"],
+				"value": "none",
+				"locked": false,
+				"cssProperty": "textDecoration"
+			},
+			"fontStyle": {
+				"name": "Font Style",
+				"options": ["normal",
+				"oblique",
+				"italic"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontStyle"
+			},
+			"fontVariant": {
+				"name": "Font Case",
+				"options": ["all-caps",
+				"small-caps",
+				"normal"],
+				"value": "normal",
+				"locked": false,
+				"cssProperty": "fontVariant"
+			},
+			"opacity": {
+				"name": "Opacity",
+				"value": null,
+				"locked": false,
+				"cssProperty": "opacity"
+			},
+			"textTransform": {
+				"name": "Text Transform",
+				"options": ["uppercase",
+				"lowercase",
+				"none"],
+				"value": "none",
+				"locked": true,
+				"cssProperty": "textTransform"
+			}
+		}
+	}]
+}
