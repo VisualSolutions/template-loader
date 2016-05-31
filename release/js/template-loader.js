@@ -21,23 +21,36 @@ var Mvision;
         Templates.Component = Component;
         var Loader = (function () {
             function Loader(callback) {
+                var _this = this;
                 this.callback = callback;
-                this.components = [];
+                if (!window.player) {
+                    window.player = {
+                        mediaFinished: function () { },
+                        mediaError: function (s) { },
+                        mediaReady: function (s) { }
+                    };
+                }
+                this.components = null;
                 this.dataJson = this.getParameterByName(QueryStrings.Data);
                 this.platformType = this.getParameterByName(QueryStrings.PlatformType);
                 this.autoPlay =
                     String(this.getParameterByName(QueryStrings.AutoPlay))
                         .toLowerCase()
                         !== 'false';
+                this.promise = new Promise(function (resolve, reject) {
+                    _this.resolve = resolve;
+                    _this.reject = reject;
+                });
                 this.getDataJson();
             }
             Loader.prototype.getComponents = function (callback) {
-                if (this.components) {
+                if (this.components && callback) {
                     callback(this.components);
                 }
                 else {
                     this.callback = callback;
                 }
+                return this.promise;
             };
             Loader.prototype.ready = function () {
                 window.player.mediaReady(this.autoPlay);
@@ -71,6 +84,9 @@ var Mvision;
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
                         _this.dataJsonCallback(JSON.parse(xhttp.responseText));
                     }
+                    else if (xhttp.readyState === 4) {
+                        _this.reject(xhttp.statusText);
+                    }
                 };
                 xhttp.open('GET', mframeUrl);
                 xhttp.send();
@@ -84,10 +100,12 @@ var Mvision;
                 if (this.callback != null) {
                     this.callback(this.components);
                 }
+                this.resolve(this.components);
             };
             return Loader;
         }());
         Templates.Loader = Loader;
         window['Loader'] = window['Loader'] || Loader;
+        var x = new Loader(null);
     })(Templates = Mvision.Templates || (Mvision.Templates = {}));
 })(Mvision || (Mvision = {}));

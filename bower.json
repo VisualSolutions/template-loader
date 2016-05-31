@@ -6,5 +6,8 @@
     "Vladimir Ciobanu"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/VisualSolutions/template-loader"
+  "homepage": "https://github.com/VisualSolutions/template-loader",
+  "dependencies": {
+    "es6-shim": "^0.35.1"
+  }
 }

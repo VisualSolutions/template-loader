@@ -1,14 +1,21 @@
+<!DOCTYPE html>
+
 <html>
 
 <body>
-    <script src="js/template-loader.js"></script>
-    <script>
-        var x = new window.Loader(function(data) {
+    <script src="js/es6-shim.min.js" type="text/javascript"></script>
+    <script src="js/template-loader.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var x = new window.Loader();
+        x.getComponents(function(data) {
+            console.log('You can use this callback to get the data.');
+            console.log(data);
+        }).then(function(data) {
+            console.log('Or you can use this promise to get the data');
             console.log(data);
         });
-        x.ready();
-        x.error('reason');
-        x.finished();
+
+        console.log('Neither should evaluate immediatly, since the data is downloaded with an XMLHTTPRequest from the local web server. Subsequent calls should respond pretty fast though, since the result is re-used.');
     </script>
 </body>
 

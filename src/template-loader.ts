@@ -19,9 +19,19 @@ module Mvision.Templates {
         private platformType: string;
         private autoPlay: boolean;
         private components: Component[];
+        private promise: Promise<Component[]>;
+        private resolve: (data: Component[]) => void;
+        private reject: (reason: any) => void;
 
         constructor(private callback: (c: Component[]) => void) {
-            this.components = [];
+            if (!window.player) {
+                window.player = {
+                    mediaFinished: function() {},
+                    mediaError: function(s) {},
+                    mediaReady: function(s) {}
+                };
+            }
+            this.components = null;
             this.dataJson = this.getParameterByName(QueryStrings.Data);
             this.platformType = this.getParameterByName(QueryStrings.PlatformType);
             this.autoPlay =
@@ -29,15 +39,20 @@ module Mvision.Templates {
                 .toLowerCase()
                 !== 'false';
 
+            this.promise = new Promise<Component[]>((resolve, reject) => {
+                this.resolve = resolve;
+                this.reject = reject;
+            });
             this.getDataJson();
         }
 
-        public getComponents(callback: (c: Component[]) => void): void {
-            if (this.components) {
+        public getComponents(callback: (c: Component[]) => void): Promise<Component[]> {
+            if (this.components && callback) {
                 callback(this.components);
             } else {
                 this.callback = callback;
             }
+            return this.promise;
         }
 
         public ready() {
@@ -72,6 +87,8 @@ module Mvision.Templates {
             xhttp.onreadystatechange = () => {
                 if (xhttp.readyState === 4 && xhttp.status === 200) {
                     this.dataJsonCallback(JSON.parse(xhttp.responseText));
+                } else if(xhttp.readyState === 4) {
+                    this.reject(xhttp.statusText);
                 }
             };
 
@@ -87,8 +104,10 @@ module Mvision.Templates {
             if (this.callback != null) {
                 this.callback(this.components);
             }
+            this.resolve(this.components);
         }
     }
 
     window['Loader'] = window['Loader'] || Loader;
+    var x = new Loader(null);
 }
