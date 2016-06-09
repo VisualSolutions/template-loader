@@ -24,8 +24,8 @@ module Mvision.Templates {
         private reject: (reason: any) => void;
 
         constructor(private callback: (c: Component[]) => void) {
-            if (!window.player) {
-                window.player = {
+            if (!window.Player) {
+                window.Player = {
                     mediaFinished: function() {},
                     mediaError: function(s) {},
                     mediaReady: function(s) {}
@@ -56,15 +56,15 @@ module Mvision.Templates {
         }
 
         public ready() {
-            window.player.mediaReady(this.autoPlay);
+            window.Player.mediaReady(this.autoPlay);
         }
 
         public error(message: string) {
-            window.player.mediaError(message);
+            window.Player.mediaError(message);
         }
 
         public finished() {
-            window.player.mediaFinished();
+            window.Player.mediaFinished();
         }
 
         private getParameterByName(name, url = window.location.href) {

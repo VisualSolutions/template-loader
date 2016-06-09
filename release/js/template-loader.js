@@ -23,8 +23,8 @@ var Mvision;
             function Loader(callback) {
                 var _this = this;
                 this.callback = callback;
-                if (!window.player) {
-                    window.player = {
+                if (!window.Player) {
+                    window.Player = {
                         mediaFinished: function () { },
                         mediaError: function (s) { },
                         mediaReady: function (s) { }
@@ -53,13 +53,13 @@ var Mvision;
                 return this.promise;
             };
             Loader.prototype.ready = function () {
-                window.player.mediaReady(this.autoPlay);
+                window.Player.mediaReady(this.autoPlay);
             };
             Loader.prototype.error = function (message) {
-                window.player.mediaError(message);
+                window.Player.mediaError(message);
             };
             Loader.prototype.finished = function () {
-                window.player.mediaFinished();
+                window.Player.mediaFinished();
             };
             Loader.prototype.getParameterByName = function (name, url) {
                 if (url === void 0) { url = window.location.href; }

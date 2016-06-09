@@ -7,4 +7,4 @@ declare namespace PlayerExternal {
 
 }
 
-interface Window { player: PlayerExternal.PlayerApi; }
+interface Window { Player: PlayerExternal.PlayerApi; }
