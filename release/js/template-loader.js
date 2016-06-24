@@ -69,6 +69,12 @@ var Mvision;
                 }
                 return this.promise;
             };
+            Loader.prototype.isAutoPlay = function () {
+                return this.autoPlay;
+            };
+            Loader.prototype.getPlatformType = function () {
+                return this.platformType;
+            };
             Loader.prototype.getDuration = function () {
                 return this.duration;
             };

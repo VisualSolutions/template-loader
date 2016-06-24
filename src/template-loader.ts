@@ -71,6 +71,14 @@ module Mvision.Templates {
             return this.promise;
         }
 
+        public isAutoPlay() {
+            return this.autoPlay;
+        }
+
+        public getPlatformType() {
+            return this.platformType;
+        }
+
         public getDuration() {
             return this.duration;
         }
