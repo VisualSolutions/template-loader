@@ -9,7 +9,14 @@ var Mvision;
             QueryStrings.Data = 'data';
             QueryStrings.PlatformType = 'platformType';
             QueryStrings.AutoPlay = 'autoPlay';
+            QueryStrings.Duration = 'duration';
             return QueryStrings;
+        }());
+        var PlaybackConstants = (function () {
+            function PlaybackConstants() {
+            }
+            PlaybackConstants.DurationAuto = -1;
+            return PlaybackConstants;
         }());
         var Component = (function () {
             function Component(type, value) {
@@ -25,9 +32,15 @@ var Mvision;
                 this.callback = callback;
                 if (!window.Player) {
                     window.Player = {
-                        mediaFinished: function () { },
-                        mediaError: function (s) { },
-                        mediaReady: function (s) { }
+                        mediaFinished: function () {
+                            console.log("mediaFinished");
+                        },
+                        mediaError: function (message) {
+                            console.log("mediaError: " + message);
+                        },
+                        mediaReady: function (started) {
+                            console.log("mediaReady: started=" + started);
+                        }
                     };
                 }
                 this.components = null;
@@ -37,6 +50,10 @@ var Mvision;
                     String(this.getParameterByName(QueryStrings.AutoPlay))
                         .toLowerCase()
                         !== 'false';
+                this.duration = parseInt(this.getParameterByName(QueryStrings.Duration));
+                if (isNaN(this.duration)) {
+                    this.duration = PlaybackConstants.DurationAuto;
+                }
                 this.promise = new Promise(function (resolve, reject) {
                     _this.resolve = resolve;
                     _this.reject = reject;
@@ -51,6 +68,9 @@ var Mvision;
                     this.callback = callback;
                 }
                 return this.promise;
+            };
+            Loader.prototype.getDuration = function () {
+                return this.duration;
             };
             Loader.prototype.ready = function () {
                 window.Player.mediaReady(this.autoPlay);
@@ -88,7 +108,7 @@ var Mvision;
                         _this.dataJsonCallback(JSON.parse(xhttp.responseText));
                     }
                     else if (xhttp.readyState === 4) {
-                        _this.reject(xhttp.statusText);
+                        _this.reject("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
                     }
                 };
                 xhttp.open('GET', mframeUrl);

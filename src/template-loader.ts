@@ -7,6 +7,11 @@ module Mvision.Templates {
         public static Data = 'data';
         public static PlatformType = 'platformType';
         public static AutoPlay = 'autoPlay';
+        public static Duration = 'duration';
+    }
+
+    class PlaybackConstants {
+        public static DurationAuto = -1;
     }
 
     export class Component {
@@ -18,6 +23,7 @@ module Mvision.Templates {
         private dataJson: string;
         private platformType: string;
         private autoPlay: boolean;
+        private duration: number;
         private components: Component[];
         private promise: Promise<Component[]>;
         private resolve: (data: Component[]) => void;
@@ -26,9 +32,15 @@ module Mvision.Templates {
         constructor(private callback: (c: Component[]) => void) {
             if (!window.Player) {
                 window.Player = {
-                    mediaFinished: function() {},
-                    mediaError: function(s) {},
-                    mediaReady: function(s) {}
+                    mediaFinished: function() {
+                        console.log("mediaFinished");
+                    },
+                    mediaError: function(message) {
+                        console.log("mediaError: " + message);
+                    },
+                    mediaReady: function(started) {
+                        console.log("mediaReady: started=" + started);
+                    }
                 };
             }
             this.components = null;
@@ -38,6 +50,10 @@ module Mvision.Templates {
                 String(this.getParameterByName(QueryStrings.AutoPlay))
                 .toLowerCase()
                 !== 'false';
+            this.duration = parseInt(this.getParameterByName(QueryStrings.Duration));
+            if (isNaN(this.duration)) {
+                this.duration = PlaybackConstants.DurationAuto;
+            }
 
             this.promise = new Promise<Component[]>((resolve, reject) => {
                 this.resolve = resolve;
@@ -53,6 +69,10 @@ module Mvision.Templates {
                 this.callback = callback;
             }
             return this.promise;
+        }
+
+        public getDuration() {
+            return this.duration;
         }
 
         public ready() {
@@ -90,8 +110,8 @@ module Mvision.Templates {
             xhttp.onreadystatechange = () => {
                 if (xhttp.readyState === 4 && xhttp.status === 200) {
                     this.dataJsonCallback(JSON.parse(xhttp.responseText));
-                } else if(xhttp.readyState === 4) {
-                    this.reject(xhttp.statusText);
+                } else if (xhttp.readyState === 4) {
+                    this.reject("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
                 }
             };
 
