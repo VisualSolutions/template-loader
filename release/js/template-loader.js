@@ -56,6 +56,9 @@ var Mvision;
                 window.Player.mediaReady(this.autoPlay);
             };
             Loader.prototype.error = function (message) {
+                if (!message) {
+                    message = "Unspecified error.";
+                }
                 window.Player.mediaError(message);
             };
             Loader.prototype.finished = function () {

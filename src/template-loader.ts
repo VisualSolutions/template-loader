@@ -60,6 +60,9 @@ module Mvision.Templates {
         }
 
         public error(message: string) {
+            if (!message) {
+              message = "Unspecified error.";
+            }
             window.Player.mediaError(message);
         }
 
