@@ -1,8 +1,8 @@
 declare namespace PlayerExternal {
     class PlayerApi {
-        mediaFinished(): void;
-        mediaError(message: string);
-        mediaReady(started: boolean);
+        mediaFinished(playId: number): void;
+        mediaError(playId: number, message: string);
+        mediaReady(playId: number, started: boolean);
     }
 
 }

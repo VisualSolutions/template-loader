@@ -5,6 +5,7 @@ module Mvision.Templates {
 
     class QueryStrings {
         public static Data = 'data';
+        public static PlayId = 'playId';
         public static PlatformType = 'platformType';
         public static AutoPlay = 'autoPlay';
         public static Duration = 'duration';
@@ -21,6 +22,7 @@ module Mvision.Templates {
 
     export class Loader {
         private dataJson: string;
+        private playId: number;
         private platformType: string;
         private autoPlay: boolean;
         private duration: number;
@@ -32,19 +34,20 @@ module Mvision.Templates {
         constructor(private callback: (c: Component[]) => void) {
             if (!window.Player) {
                 window.Player = {
-                    mediaFinished: function() {
-                        console.log("mediaFinished");
+                    mediaFinished: function(playId: number) {
+                        console.log("mediaFinished: playId=" + playId);
                     },
-                    mediaError: function(message) {
-                        console.log("mediaError: " + message);
+                    mediaError: function(playId: number, message: string) {
+                        console.log("mediaError: playId=" + playId + ", message=" + message);
                     },
-                    mediaReady: function(started) {
-                        console.log("mediaReady: started=" + started);
+                    mediaReady: function(playId: number, started: boolean) {
+                        console.log("mediaReady: playId=" + playId + ", started=" + started);
                     }
                 };
             }
             this.components = null;
             this.dataJson = this.getParameterByName(QueryStrings.Data);
+            this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));
             this.platformType = this.getParameterByName(QueryStrings.PlatformType);
             this.autoPlay =
                 String(this.getParameterByName(QueryStrings.AutoPlay))
@@ -84,18 +87,18 @@ module Mvision.Templates {
         }
 
         public ready() {
-            window.Player.mediaReady(this.autoPlay);
+            window.Player.mediaReady(this.playId, this.autoPlay);
         }
 
         public error(message: string) {
             if (!message) {
               message = "Unspecified error.";
             }
-            window.Player.mediaError(message);
+            window.Player.mediaError(this.playId, message);
         }
 
         public finished() {
-            window.Player.mediaFinished();
+            window.Player.mediaFinished(this.playId);
         }
 
         private getParameterByName(name, url = window.location.href) {

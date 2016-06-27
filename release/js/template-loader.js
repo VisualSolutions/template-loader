@@ -7,6 +7,7 @@ var Mvision;
             function QueryStrings() {
             }
             QueryStrings.Data = 'data';
+            QueryStrings.PlayId = 'playId';
             QueryStrings.PlatformType = 'platformType';
             QueryStrings.AutoPlay = 'autoPlay';
             QueryStrings.Duration = 'duration';
@@ -32,19 +33,20 @@ var Mvision;
                 this.callback = callback;
                 if (!window.Player) {
                     window.Player = {
-                        mediaFinished: function () {
-                            console.log("mediaFinished");
+                        mediaFinished: function (playId) {
+                            console.log("mediaFinished: playId=" + playId);
                         },
-                        mediaError: function (message) {
-                            console.log("mediaError: " + message);
+                        mediaError: function (playId, message) {
+                            console.log("mediaError: playId=" + playId + ", message=" + message);
                         },
-                        mediaReady: function (started) {
-                            console.log("mediaReady: started=" + started);
+                        mediaReady: function (playId, started) {
+                            console.log("mediaReady: playId=" + playId + ", started=" + started);
                         }
                     };
                 }
                 this.components = null;
                 this.dataJson = this.getParameterByName(QueryStrings.Data);
+                this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));
                 this.platformType = this.getParameterByName(QueryStrings.PlatformType);
                 this.autoPlay =
                     String(this.getParameterByName(QueryStrings.AutoPlay))
@@ -79,16 +81,16 @@ var Mvision;
                 return this.duration;
             };
             Loader.prototype.ready = function () {
-                window.Player.mediaReady(this.autoPlay);
+                window.Player.mediaReady(this.playId, this.autoPlay);
             };
             Loader.prototype.error = function (message) {
                 if (!message) {
                     message = "Unspecified error.";
                 }
-                window.Player.mediaError(message);
+                window.Player.mediaError(this.playId, message);
             };
             Loader.prototype.finished = function () {
-                window.Player.mediaFinished();
+                window.Player.mediaFinished(this.playId);
             };
             Loader.prototype.getParameterByName = function (name, url) {
                 if (url === void 0) { url = window.location.href; }
