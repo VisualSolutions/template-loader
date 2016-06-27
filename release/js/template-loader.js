@@ -117,7 +117,7 @@ var Mvision;
                             _this.dataJsonCallback(JSON.parse(xhttp.responseText));
                         }
                         catch (err) {
-                            _this.error("Error parsing " + mframeUrl + ": " + err.toString());
+                            _this.reject("Error parsing " + mframeUrl + ": " + err.toString());
                         }
                     }
                     else if (xhttp.readyState === 4) {

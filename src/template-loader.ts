@@ -92,7 +92,7 @@ module Mvision.Templates {
 
         public error(message: string) {
             if (!message) {
-              message = "Unspecified error.";
+                message = "Unspecified error.";
             }
             window.Player.mediaError(this.playId, message);
         }
@@ -123,7 +123,7 @@ module Mvision.Templates {
                     try {
                         this.dataJsonCallback(JSON.parse(xhttp.responseText));
                     } catch (err) {
-                        this.error("Error parsing " + mframeUrl + ": " + err.toString());
+                        this.reject("Error parsing " + mframeUrl + ": " + err.toString());
                     }
                 } else if (xhttp.readyState === 4) {
                     this.reject("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
