@@ -117,7 +117,11 @@ module Mvision.Templates {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = () => {
                 if (xhttp.readyState === 4 && xhttp.status === 200) {
-                    this.dataJsonCallback(JSON.parse(xhttp.responseText));
+                    try {
+                        this.dataJsonCallback(JSON.parse(xhttp.responseText));
+                    } catch (err) {
+                        this.error("Error parsing " + mframeUrl + ": " + err.toString());
+                    }
                 } else if (xhttp.readyState === 4) {
                     this.reject("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
                 }

@@ -111,7 +111,12 @@ var Mvision;
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
-                        _this.dataJsonCallback(JSON.parse(xhttp.responseText));
+                        try {
+                            _this.dataJsonCallback(JSON.parse(xhttp.responseText));
+                        }
+                        catch (err) {
+                            _this.error("Error parsing " + mframeUrl + ": " + err.toString());
+                        }
                     }
                     else if (xhttp.readyState === 4) {
                         _this.reject("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
