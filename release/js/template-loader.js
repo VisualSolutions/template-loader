@@ -112,7 +112,7 @@ var Mvision;
                 var _this = this;
                 var mframeUrl = this.dataJson;
                 if (!mframeUrl) {
-                    mframeUrl = 'mframe.json';
+                    mframeUrl = 'mframe.json?timestamp=' + new Date().getMilliseconds();
                 }
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
