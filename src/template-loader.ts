@@ -11,7 +11,7 @@ module Mvision.Templates {
         public static Duration = 'duration';
     }
 
-    class PlaybackConstants {
+    export class PlaybackConstants {
         public static DurationAuto = -1;
     }
 
@@ -24,14 +24,14 @@ module Mvision.Templates {
         private dataJson: string;
         private playId: number;
         private platformType: string;
-        private autoPlay: boolean;
         private duration: number;
-        private components: Component[];
-        private promise: Promise<Component[]>;
-        private resolve: (data: Component[]) => void;
-        private reject: (reason: any) => void;
+        private started: boolean;
+        private componentsPromise: Promise<Component[]>;
+        private componentsPromiseResolve: (data: Component[]) => void;
+        private startPromise: Promise;
+        private startPromiseResolve: () => void;
 
-        constructor(private callback: (c: Component[]) => void) {
+        constructor() {
             if (!window.Player) {
                 window.Player = {
                     mediaFinished: function(playId: number) {
@@ -45,49 +45,49 @@ module Mvision.Templates {
                     }
                 };
             }
-            this.components = null;
             this.dataJson = this.getParameterByName(QueryStrings.Data);
             this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));
             this.platformType = this.getParameterByName(QueryStrings.PlatformType);
-            this.autoPlay =
-                String(this.getParameterByName(QueryStrings.AutoPlay))
-                .toLowerCase()
-                !== 'false';
             this.duration = parseInt(this.getParameterByName(QueryStrings.Duration));
             if (isNaN(this.duration)) {
                 this.duration = PlaybackConstants.DurationAuto;
             }
+            this.started =
+                String(this.getParameterByName(QueryStrings.AutoPlay))
+                .toLowerCase()
+                !== 'false';
 
-            this.promise = new Promise<Component[]>((resolve, reject) => {
-                this.resolve = resolve;
-                this.reject = reject;
+            this.startPromise = new Promise<Component[]>((resolve, reject) => {
+                this.startPromiseResolve = resolve;
+            });
+            if (this.started) {
+                this.startPromiseResolve();
+            }
+
+            this.componentsPromise = new Promise<Component[]>((resolve, reject) => {
+                this.componentsPromiseResolve = resolve;
             });
             this.getDataJson();
         }
 
-        public getComponents(callback: (c: Component[]) => void): Promise<Component[]> {
-            if (this.components && callback) {
-                callback(this.components);
-            } else {
-                this.callback = callback;
-            }
-            return this.promise;
+        public getComponents(): Promise<Component[]> {
+            return this.componentsPromise;
         }
 
-        public isAutoPlay() {
-            return this.autoPlay;
+        public isStarted(): Promise {
+            return this.startPromise;
         }
 
-        public getPlatformType() {
+        public getPlatformType():string {
             return this.platformType;
         }
 
-        public getDuration() {
+        public getDuration():number {
             return this.duration;
         }
 
         public ready() {
-            window.Player.mediaReady(this.playId, this.autoPlay);
+            window.Player.mediaReady(this.playId, this.started);
         }
 
         public error(message: string) {
@@ -99,6 +99,13 @@ module Mvision.Templates {
 
         public finished() {
             window.Player.mediaFinished(this.playId);
+        }
+
+        public play() {
+            if (!this.started) {
+                this.started = true;
+                this.startPromiseResolve();
+            }
         }
 
         private getParameterByName(name, url = window.location.href) {
@@ -120,32 +127,28 @@ module Mvision.Templates {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = () => {
                 if (xhttp.readyState === 4 && xhttp.status === 200) {
+                    var components: Component[];
                     try {
-                        this.dataJsonCallback(JSON.parse(xhttp.responseText));
+                        var dataJson = JSON.parse(xhttp.responseText);
+                        components = [];
+                        dataJson.components.forEach(c => {
+                            components.push(new Component(c.type, c.params.value));
+                        });
                     } catch (err) {
-                        this.reject("Error parsing " + mframeUrl + ": " + err.toString());
+                        this.error("Error parsing " + mframeUrl + ": " + err.toString());
+                        return;
                     }
+
+                    this.componentsPromiseResolve(components);
                 } else if (xhttp.readyState === 4) {
-                    this.reject("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
+                    this.error("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
                 }
             };
 
             xhttp.open('GET', mframeUrl);
             xhttp.send();
         }
-
-        private dataJsonCallback(data: any) {
-            this.components = [];
-            data.components.forEach(c => {
-                this.components.push(new Component(c.type, c.params.value));
-            });
-            if (this.callback != null) {
-                this.callback(this.components);
-            }
-            this.resolve(this.components);
-        }
     }
 
-    window['Loader'] = window['Loader'] || Loader;
-    var x = new Loader(null);
+    window['Loader'] = window['Loader'] || new Loader();
 }

@@ -19,6 +19,7 @@ var Mvision;
             PlaybackConstants.DurationAuto = -1;
             return PlaybackConstants;
         }());
+        Templates.PlaybackConstants = PlaybackConstants;
         var Component = (function () {
             function Component(type, value) {
                 this.type = type;
@@ -28,9 +29,8 @@ var Mvision;
         }());
         Templates.Component = Component;
         var Loader = (function () {
-            function Loader(callback) {
+            function Loader() {
                 var _this = this;
-                this.callback = callback;
                 if (!window.Player) {
                     window.Player = {
                         mediaFinished: function (playId) {
@@ -44,35 +44,33 @@ var Mvision;
                         }
                     };
                 }
-                this.components = null;
                 this.dataJson = this.getParameterByName(QueryStrings.Data);
                 this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));
                 this.platformType = this.getParameterByName(QueryStrings.PlatformType);
-                this.autoPlay =
-                    String(this.getParameterByName(QueryStrings.AutoPlay))
-                        .toLowerCase()
-                        !== 'false';
                 this.duration = parseInt(this.getParameterByName(QueryStrings.Duration));
                 if (isNaN(this.duration)) {
                     this.duration = PlaybackConstants.DurationAuto;
                 }
-                this.promise = new Promise(function (resolve, reject) {
-                    _this.resolve = resolve;
-                    _this.reject = reject;
+                this.started =
+                    String(this.getParameterByName(QueryStrings.AutoPlay))
+                        .toLowerCase()
+                        !== 'false';
+                this.startPromise = new Promise(function (resolve, reject) {
+                    _this.startPromiseResolve = resolve;
+                });
+                if (this.started) {
+                    this.startPromiseResolve();
+                }
+                this.componentsPromise = new Promise(function (resolve, reject) {
+                    _this.componentsPromiseResolve = resolve;
                 });
                 this.getDataJson();
             }
-            Loader.prototype.getComponents = function (callback) {
-                if (this.components && callback) {
-                    callback(this.components);
-                }
-                else {
-                    this.callback = callback;
-                }
-                return this.promise;
+            Loader.prototype.getComponents = function () {
+                return this.componentsPromise;
             };
-            Loader.prototype.isAutoPlay = function () {
-                return this.autoPlay;
+            Loader.prototype.isStarted = function () {
+                return this.startPromise;
             };
             Loader.prototype.getPlatformType = function () {
                 return this.platformType;
@@ -81,7 +79,7 @@ var Mvision;
                 return this.duration;
             };
             Loader.prototype.ready = function () {
-                window.Player.mediaReady(this.playId, this.autoPlay);
+                window.Player.mediaReady(this.playId, this.started);
             };
             Loader.prototype.error = function (message) {
                 if (!message) {
@@ -91,6 +89,12 @@ var Mvision;
             };
             Loader.prototype.finished = function () {
                 window.Player.mediaFinished(this.playId);
+            };
+            Loader.prototype.play = function () {
+                if (!this.started) {
+                    this.started = true;
+                    this.startPromiseResolve();
+                }
             };
             Loader.prototype.getParameterByName = function (name, url) {
                 if (url === void 0) { url = window.location.href; }
@@ -113,35 +117,30 @@ var Mvision;
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
                     if (xhttp.readyState === 4 && xhttp.status === 200) {
+                        var components;
                         try {
-                            _this.dataJsonCallback(JSON.parse(xhttp.responseText));
+                            var dataJson = JSON.parse(xhttp.responseText);
+                            components = [];
+                            dataJson.components.forEach(function (c) {
+                                components.push(new Component(c.type, c.params.value));
+                            });
                         }
                         catch (err) {
-                            _this.reject("Error parsing " + mframeUrl + ": " + err.toString());
+                            _this.error("Error parsing " + mframeUrl + ": " + err.toString());
+                            return;
                         }
+                        _this.componentsPromiseResolve(components);
                     }
                     else if (xhttp.readyState === 4) {
-                        _this.reject("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
+                        _this.error("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
                     }
                 };
                 xhttp.open('GET', mframeUrl);
                 xhttp.send();
             };
-            Loader.prototype.dataJsonCallback = function (data) {
-                var _this = this;
-                this.components = [];
-                data.components.forEach(function (c) {
-                    _this.components.push(new Component(c.type, c.params.value));
-                });
-                if (this.callback != null) {
-                    this.callback(this.components);
-                }
-                this.resolve(this.components);
-            };
             return Loader;
         }());
         Templates.Loader = Loader;
-        window['Loader'] = window['Loader'] || Loader;
-        var x = new Loader(null);
+        window['Loader'] = window['Loader'] || new Loader();
     })(Templates = Mvision.Templates || (Mvision.Templates = {}));
 })(Mvision || (Mvision = {}));
