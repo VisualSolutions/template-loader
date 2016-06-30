@@ -121,7 +121,7 @@ module Mvision.Templates {
         private getDataJson() {
             var mframeUrl = this.dataJson;
             if (!mframeUrl) {
-                mframeUrl = 'mframe.json?timestamp=' + new Date().getMilliseconds();
+                mframeUrl = 'mframe.json?timestamp=' + new Date().getTime();
             }
 
             var xhttp = new XMLHttpRequest();
