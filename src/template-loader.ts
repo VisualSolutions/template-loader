@@ -86,6 +86,12 @@ module Mvision.Templates {
             return this.duration;
         }
 
+        public ifDurationNotSetEndIn(templateDurationInSeconds:number) {
+            if (this.duration == PlaybackConstants.DurationAuto) {
+                setTimeout(this.finished, templateDurationInSeconds * 1000);
+            }
+        }
+
         public ready() {
             window.Player.mediaReady(this.playId, this.started);
         }

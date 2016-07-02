@@ -78,6 +78,11 @@ var Mvision;
             Loader.prototype.getDuration = function () {
                 return this.duration;
             };
+            Loader.prototype.ifDurationNotSetEndIn = function (templateDurationInSeconds) {
+                if (this.duration == PlaybackConstants.DurationAuto) {
+                    setTimeout(this.finished, templateDurationInSeconds * 1000);
+                }
+            };
             Loader.prototype.ready = function () {
                 window.Player.mediaReady(this.playId, this.started);
             };
