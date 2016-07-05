@@ -28,21 +28,45 @@ var Mvision;
             return Component;
         }());
         Templates.Component = Component;
+        var PreviewPlayer = (function () {
+            function PreviewPlayer() {
+            }
+            PreviewPlayer.prototype.mediaFinished = function (playId) {
+                window.parent.postMessage({
+                    id: window.frameElement.id,
+                    action: 'mediaFinished',
+                    playId: playId
+                }, "*");
+            };
+            PreviewPlayer.prototype.mediaError = function (playId, message) {
+                window.parent.postMessage({
+                    id: window.frameElement.id,
+                    action: 'mediaError',
+                    playId: playId,
+                    message: message
+                }, "*");
+            };
+            PreviewPlayer.prototype.mediaReady = function (playId, started) {
+                window.parent.postMessage({
+                    id: window.frameElement.id,
+                    action: 'mediaReady',
+                    playId: playId,
+                    started: started
+                }, "*");
+            };
+            return PreviewPlayer;
+        }());
+        Templates.PreviewPlayer = PreviewPlayer;
         var Loader = (function () {
             function Loader() {
                 var _this = this;
                 if (!window.Player) {
-                    window.Player = {
-                        mediaFinished: function (playId) {
-                            console.log("mediaFinished: playId=" + playId);
-                        },
-                        mediaError: function (playId, message) {
-                            console.log("mediaError: playId=" + playId + ", message=" + message);
-                        },
-                        mediaReady: function (playId, started) {
-                            console.log("mediaReady: playId=" + playId + ", started=" + started);
+                    window.Player = new PreviewPlayer();
+                    window.addEventListener('message', function (event) {
+                        if (event && event.data && event.data.action && event.data.action === 'play') {
+                            _this.play();
                         }
-                    };
+                    });
                 }
                 this.dataJson = this.getParameterByName(QueryStrings.Data);
                 this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));

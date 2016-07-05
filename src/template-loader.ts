@@ -20,6 +20,34 @@ module Mvision.Templates {
         }
     }
 
+    export class PreviewPlayer implements PlayerExternal.PlayerApi {
+        mediaFinished(playId: number): void {
+            window.parent.postMessage( {
+                id: window.frameElement.id,
+                action: 'mediaFinished',
+                playId: playId
+            }, "*");
+        }
+
+        mediaError(playId: number, message: string): void {
+            window.parent.postMessage( {
+                id: window.frameElement.id,
+                action: 'mediaError',
+                playId: playId,
+                message: message
+            }, "*");
+        }
+
+        mediaReady(playId: number, started: boolean): void {
+            window.parent.postMessage( {
+                id: window.frameElement.id,
+                action: 'mediaReady',
+                playId: playId,
+                started: started
+            }, "*");
+        }
+    }
+
     export class Loader {
         private dataJson: string;
         private playId: number;
@@ -33,17 +61,12 @@ module Mvision.Templates {
 
         constructor() {
             if (!window.Player) {
-                window.Player = {
-                    mediaFinished: function(playId: number) {
-                        console.log("mediaFinished: playId=" + playId);
-                    },
-                    mediaError: function(playId: number, message: string) {
-                        console.log("mediaError: playId=" + playId + ", message=" + message);
-                    },
-                    mediaReady: function(playId: number, started: boolean) {
-                        console.log("mediaReady: playId=" + playId + ", started=" + started);
-                    }
-                };
+                window.Player = new PreviewPlayer();
+                 window.addEventListener('message', (event) => {
+                     if (event && event.data && event.data.action && event.data.action === 'play') {
+                         this.play();
+                     }
+                 });
             }
             this.dataJson = this.getParameterByName(QueryStrings.Data);
             this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));
