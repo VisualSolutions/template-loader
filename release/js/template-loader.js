@@ -51,7 +51,7 @@ var Mvision;
                 }
             };
             PreviewPlayer.prototype.mediaReady = function (playId, started) {
-                if (window.frameElement.id) {
+                if (window.frameElement) {
                     window.parent.postMessage({
                         id: window.frameElement.id,
                         action: 'mediaReady',

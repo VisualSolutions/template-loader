@@ -43,7 +43,7 @@ module Mvision.Templates {
         }
 
         mediaReady(playId: number, started: boolean): void {
-            if(window.frameElement.id) {
+            if(window.frameElement) {
                 window.parent.postMessage( {
                     id: window.frameElement.id,
                     action: 'mediaReady',
