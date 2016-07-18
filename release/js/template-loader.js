@@ -51,12 +51,14 @@ var Mvision;
                 }
             };
             PreviewPlayer.prototype.mediaReady = function (playId, started) {
-                window.parent.postMessage({
-                    id: window.frameElement.id,
-                    action: 'mediaReady',
-                    playId: playId,
-                    started: started
-                }, "*");
+                if (window.frameElement.id) {
+                    window.parent.postMessage({
+                        id: window.frameElement.id,
+                        action: 'mediaReady',
+                        playId: playId,
+                        started: started
+                    }, "*");
+                }
             };
             return PreviewPlayer;
         }());

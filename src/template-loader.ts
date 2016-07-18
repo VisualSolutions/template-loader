@@ -43,12 +43,14 @@ module Mvision.Templates {
         }
 
         mediaReady(playId: number, started: boolean): void {
-            window.parent.postMessage( {
-                id: window.frameElement.id,
-                action: 'mediaReady',
-                playId: playId,
-                started: started
-            }, "*");
+            if(window.frameElement.id) {
+                window.parent.postMessage( {
+                    id: window.frameElement.id,
+                    action: 'mediaReady',
+                    playId: playId,
+                    started: started
+                }, "*");
+            }
         }
     }
 
