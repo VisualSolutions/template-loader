@@ -22,20 +22,24 @@ module Mvision.Templates {
 
     export class PreviewPlayer implements PlayerExternal.PlayerApi {
         mediaFinished(playId: number): void {
-            window.parent.postMessage( {
-                id: window.frameElement.id,
-                action: 'mediaFinished',
-                playId: playId
-            }, "*");
+            if (window.frameElement) {
+                window.parent.postMessage( {
+                    id: window.frameElement.id,
+                    action: 'mediaFinished',
+                    playId: playId
+                }, "*");
+            }
         }
 
         mediaError(playId: number, message: string): void {
-            window.parent.postMessage( {
-                id: window.frameElement.id,
-                action: 'mediaError',
-                playId: playId,
-                message: message
-            }, "*");
+            if (window.frameElement) {
+                window.parent.postMessage( {
+                    id: window.frameElement.id,
+                    action: 'mediaError',
+                    playId: playId,
+                    message: message
+                }, "*");
+            }
         }
 
         mediaReady(playId: number, started: boolean): void {
@@ -47,6 +51,7 @@ module Mvision.Templates {
             }, "*");
         }
     }
+
 
     export class Loader {
         private dataJson: string;

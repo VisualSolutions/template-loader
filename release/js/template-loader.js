@@ -32,19 +32,23 @@ var Mvision;
             function PreviewPlayer() {
             }
             PreviewPlayer.prototype.mediaFinished = function (playId) {
-                window.parent.postMessage({
-                    id: window.frameElement.id,
-                    action: 'mediaFinished',
-                    playId: playId
-                }, "*");
+                if (window.frameElement) {
+                    window.parent.postMessage({
+                        id: window.frameElement.id,
+                        action: 'mediaFinished',
+                        playId: playId
+                    }, "*");
+                }
             };
             PreviewPlayer.prototype.mediaError = function (playId, message) {
-                window.parent.postMessage({
-                    id: window.frameElement.id,
-                    action: 'mediaError',
-                    playId: playId,
-                    message: message
-                }, "*");
+                if (window.frameElement) {
+                    window.parent.postMessage({
+                        id: window.frameElement.id,
+                        action: 'mediaError',
+                        playId: playId,
+                        message: message
+                    }, "*");
+                }
             };
             PreviewPlayer.prototype.mediaReady = function (playId, started) {
                 window.parent.postMessage({
