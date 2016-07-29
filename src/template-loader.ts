@@ -15,7 +15,17 @@ module Mvision.Templates {
         public static DurationAuto = -1;
     }
 
+    export class Param {
+        constructor(public name: string, public type: string, public value: any) {
+        }
+    }
+
     export class Component {
+        constructor(public name: string, public params: Param[]) {
+        }
+    }
+
+    export class ComponentV1 {
         constructor(public type, public value) {
         }
     }
@@ -168,7 +178,12 @@ module Mvision.Templates {
                         var dataJson = JSON.parse(xhttp.responseText);
                         components = [];
                         dataJson.components.forEach(c => {
-                            components.push(new Component(c.type, c.params.value));
+                            if (typeof c.type !== 'undefined' && c.params) {
+                                // Hack to allow old/deprecated components.
+                                components.push(<any>new ComponentV1(c.type, c.params.value));
+                            } else {
+                            components.push(new Component(c.name, c.params.map(p => new Param(p.name, p.type, p.value))));
+                            }
                         });
                     } catch (err) {
                         this.error("Error parsing " + mframeUrl + ": " + err.toString());

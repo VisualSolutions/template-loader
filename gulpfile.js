@@ -17,3 +17,5 @@ gulp.task('scripts', function() {
 gulp.task('watch', ['scripts'], function() {
     gulp.watch('./src/**.ts', ['scripts']);
 });
+
+gulp.task('default', ['watch']);
