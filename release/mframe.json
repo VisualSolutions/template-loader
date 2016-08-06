@@ -1,243 +1,319 @@
 {
-	"components": [{
-		"name": "Text Component #1 hello",
-		"locked": true,
-		"params": [{
-			"name": "text",
-			"type": "string",
-			"value": "Hey!46",
-			"default": "N/A",
-			"locked": false
-		}, {
-			"name": "defaultText",
-			"type": "string",
-			"value": "No default",
-			"default": "N/A",
-			"locked": false
-		}, {
-			"name": "maxCharacters",
-			"type": "int",
-			"value": 1,
-			"default": 0,
-			"locked": false
-		}, {
-			"name": "left",
-			"type": "rangedInt",
-			"value": 13,
-			"default": 10,
-			"locked": false
-		}, {
-			"name": "top",
-			"type": "rangedInt",
-			"value": 10,
-			"default": 10,
-			"locked": false
-		}, {
-			"name": "width",
-			"type": "rangedInt",
-			"value": 30,
-			"default": 30,
-			"locked": false
-		}, {
-			"name": "height",
-			"type": "rangedInt",
-			"value": 12.5,
-			"default": 30,
-			"locked": false
-		}, {
-			"name": "textWrapping",
-			"type": "select",
-			"value": "normal",
-			"default": "no-wrap",
-			"locked": false
-		}, {
-			"name": "textAlign",
-			"type": "select",
-			"value": "center",
-			"default": "left",
-			"locked": false
-		}, {
-			"name": "verticalAlign",
-			"type": "select",
-			"value": "middle",
-			"default": "baseline",
-			"locked": false
-		}, {
-			"name": "fontFamily",
-			"type": "select",
-			"value": "Georgia",
-			"default": "Arial",
-			"locked": false
-		}, {
-			"name": "fontStyle",
-			"type": "select",
-			"value": "italic",
-			"default": "bold",
-			"locked": false
-		}, {
-			"name": "textTransform",
-			"type": "select",
-			"value": "lowercase",
-			"default": "Arial",
-			"locked": false
-		}, {
-			"name": "fontSize",
-			"type": "intRange",
-			"value": {
-				"min": 14,
-				"max": 100
-			},
-			"default": {
-				"min": 12,
-				"max": 100
-			},
-			"locked": false
-		}, {
-			"name": "color",
-			"type": "color",
-			"value": "#6cda5d",
-			"default": "#111",
-			"locked": false
-		}, {
-			"name": "opacity",
-			"type": "rangedInt",
-			"value": 0.55,
-			"default": 1,
-			"locked": false
-		}, {
-			"name": "backgroundColor",
-			"type": "color",
-			"value": "#9e3a3a",
-			"default": "#ff",
-			"locked": false
-		}, {
-			"name": "masterBlacklist",
-			"type": "bool",
-			"value": true,
-			"default": true,
-			"locked": false
-		}, {
-			"name": "wordFilter",
-			"type": "array",
-			"value": [],
-			"default": [],
-			"locked": false
-		}]
-	}, {
-		"name": "Image Component #1",
-		"locked": false,
-		"params": [{
-			"name": "src",
-			"type": "string",
-			"value": "https://upload.wikimedia.org/wikipedia/en/0/02/Mood_Media_Corporation_Logo.png",
-			"default": "https://upload.wikimedia.org/wikipedia/en/0/02/Mood_Media_Corporation_Logo.png",
-			"locked": false
-		}, {
-			"name": "left",
-			"type": "rangedInt",
-			"value": 50,
-			"default": 10,
-			"locked": false
-		}, {
-			"name": "top",
-			"type": "rangedInt",
-			"value": 10,
-			"default": 10,
-			"locked": false
-		}, {
-			"name": "width",
-			"type": "rangedInt",
-			"value": 30,
-			"default": 30,
-			"locked": false
-		}, {
-			"name": "height",
-			"type": "rangedInt",
-			"value": 30,
-			"default": 30,
-			"locked": false
-		}, {
-			"name": "rotation",
-			"type": "rangedInt",
-			"value": 10,
-			"default": 10,
-			"locked": false
-		}, {
-			"name": "backgroundSize",
-			"type": "select",
-			"value": "cover",
-			"default": "cover",
-			"locked": false
-		}, {
-			"name": "opacity",
-			"type": "rangedInt",
-			"value": 1,
-			"default": 1,
-			"locked": false
-		}, {
-			"name": "backgroundColor",
-			"type": "color",
-			"value": "#fff",
-			"default": "#ff",
-			"locked": false
-		}]
-	}, {
-		"name": "Slideshow Component",
-		"locked": false,
-		"params": [{
-			"name": "src",
-			"type": "array",
-			"value": ["https://media.licdn.com/media/p/7/000/28d/28a/08a9a44.png", "http://www.moodmedia.com/images/MM_SocialWifi.gif", "https://media.licdn.com/media/p/7/005/071/086/18cd96b.png"],
-			"default": ["https://media.licdn.com/media/p/7/000/28d/28a/08a9a44.png", "http://www.moodmedia.com/images/MM_SocialWifi.gif", "https://media.licdn.com/media/p/7/005/071/086/18cd96b.png"],
-			"locked": false
-		}, {
-			"name": "animationName",
-			"type": "select",
-			"value": "none",
-			"default": "zoom",
-			"locked": false
-		}, {
-			"name": "animationDuration",
-			"type": "rangedInt",
-			"value": 3,
-			"default": 3,
-			"locked": false
-		}, {
-			"name": "left",
-			"type": "rangedInt",
-			"value": 25.5,
-			"default": 10,
-			"locked": false
-		}, {
-			"name": "top",
-			"type": "rangedInt",
-			"value": 40,
-			"default": 10,
-			"locked": false
-		}, {
-			"name": "width",
-			"type": "rangedInt",
-			"value": 30,
-			"default": 30,
-			"locked": false
-		}, {
-			"name": "height",
-			"type": "rangedInt",
-			"value": 30,
-			"default": 30,
-			"locked": false
-		}, {
-			"name": "opacity",
-			"type": "rangedInt",
-			"value": 1,
-			"default": 1,
-			"locked": false
-		}, {
-			"name": "backgroundColor",
-			"type": "color",
-			"value": "#fff",
-			"default": "#ff",
-			"locked": false
-		}]
-	}]
+    "components": [
+        {
+            "name": "component1",
+            "label": {
+                "en-US": {
+                    "value": "component1",
+                    "tooltip": "Automatically generated default label."
+                }
+            },
+            "params": [
+                {
+                    "name": "param1",
+                    "label": {
+                        "en-US": {
+                            "value": "param1",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "array",
+                    "value": [
+                        "one",
+                        "two"
+                    ]
+                },
+                {
+                    "name": "param2",
+                    "label": {
+                        "en-US": {
+                            "value": "param2",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "param3",
+                    "label": {
+                        "en-US": {
+                            "value": "param3",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "color",
+                    "value": "#ffffff"
+                },
+                {
+                    "name": "param4",
+                    "label": {
+                        "en-US": {
+                            "value": "param4",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "int",
+                    "value": 10
+                },
+                {
+                    "name": "param5",
+                    "label": {
+                        "en-US": {
+                            "value": "param5",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "intRange",
+                    "value": {
+                        "min": 0,
+                        "max": 50
+                    },
+                    "typeOptions": {
+                        "min": 0,
+                        "max": 100,
+                        "step": 1
+                    }
+                },
+                {
+                    "name": "param6",
+                    "label": {
+                        "en-US": {
+                            "value": "param6",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "value": "path/to/bundle/image.jpg",
+                    "type": "mediaReference",
+                    "typeOptions": {
+                        "mediaType": 5
+                    }
+                }
+            ]
+        },
+        {
+            "name": "component2",
+            "label": {
+                "en-US": {
+                    "value": "component2",
+                    "tooltip": "Automatically generated default label."
+                }
+            },
+            "params": [
+                {
+                    "name": "param1",
+                    "label": {
+                        "en-US": {
+                            "value": "param1",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "value": {
+                        "one": true,
+                        "three": true
+                    },
+                    "type": "multiselect",
+                    "typeOptions": {
+                        "values": [
+                            "one",
+                            "two",
+                            "three",
+                            "four"
+                        ]
+                    }
+                },
+                {
+                    "name": "param2",
+                    "label": {
+                        "en-US": {
+                            "value": "param2",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "value": {
+                        "bold": true
+                    },
+                    "type": "multiselect",
+                    "typeOptions": {
+                        "renderType": "btngroup",
+                        "values": [
+                            "bold",
+                            "italic",
+                            "underline"
+                        ],
+                        "icons": {
+                            "bold": "editor-bold",
+                            "italic": "editor-italics",
+                            "underline": "editor-underline"
+                        }
+                    }
+                },
+                {
+                    "name": "param3",
+                    "label": {
+                        "en-US": {
+                            "value": "param3",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "rangedInt",
+                    "value": 50,
+                    "typeOptions": {
+                        "renderType": "slider",
+                        "min": 0,
+                        "max": 100,
+                        "step": 0.5
+                    }
+                },
+                {
+                    "name": "param4",
+                    "label": {
+                        "en-US": {
+                            "value": "param4",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "select",
+                    "value": "one",
+                    "typeOptions": {
+                        "values": [
+                            "one",
+                            "two"
+                        ]
+                    }
+                },
+                {
+                    "name": "param5",
+                    "label": {
+                        "en-US": {
+                            "value": "param5",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "select",
+                    "value": "left",
+                    "typeOptions": {
+                        "renderType": "btngroup",
+                        "values": [
+                            "left",
+                            "center",
+                            "right",
+                            "justify"
+                        ],
+                        "icons": {
+                            "left": "editor-align-left",
+                            "center": "editor-align-center",
+                            "right": "editor-align-right",
+                            "justify": "editor-align-justify"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "component3",
+            "label": {
+                "en-US": {
+                    "value": "component3",
+                    "tooltip": "Automatically generated default label."
+                }
+            },
+            "params": [
+                {
+                    "name": "param1",
+                    "label": {
+                        "en-US": {
+                            "value": "param1",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "select",
+                    "value": "Georgia",
+                    "typeOptions": {
+                        "renderType": "fontSelect",
+                        "values": [
+                            "Arial",
+                            "Courier",
+                            "Georgia",
+                            "Times New Roman",
+                            "Verdanaa"
+                        ]
+                    }
+                },
+                {
+                    "name": "param2",
+                    "label": {
+                        "en-US": {
+                            "value": "param2",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "select",
+                    "value": "16px",
+                    "typeOptions": {
+                        "renderType": "fontSize",
+                        "values": [
+                            "10px",
+                            "16px",
+                            "24px",
+                            "32px"
+                        ]
+                    }
+                },
+                {
+                    "name": "param3",
+                    "label": {
+                        "en-US": {
+                            "value": "param3",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "select",
+                    "value": "/path/to/1.jpg",
+                    "typeOptions": {
+                        "renderType": "images",
+                        "values": [
+                            {
+                                "image": "/path/to/1.jpg",
+                                "name": "first option"
+                            },
+                            {
+                                "image": "/path/to/2.jpg",
+                                "name": "second option"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "param4",
+                    "label": {
+                        "en-US": {
+                            "value": "param4",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "select",
+                    "value": "one",
+                    "typeOptions": {
+                        "renderType": "radio",
+                        "values": [
+                            "one",
+                            "two"
+                        ]
+                    }
+                },
+                {
+                    "name": "param5",
+                    "label": {
+                        "en-US": {
+                            "value": "param5",
+                            "tooltip": "Automatically generated default label."
+                        }
+                    },
+                    "type": "string",
+                    "value": "default"
+                }
+            ]
+        }
+    ]
 }
