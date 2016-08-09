@@ -178,7 +178,7 @@ module Mvision.Templates {
                         var dataJson = JSON.parse(xhttp.responseText);
                         components = [];
                         dataJson.components.forEach(c => {
-                            if (typeof c.type !== 'undefined' && c.params) {
+                            if (typeof c.type === 'number' && c.params) {
                                 // Hack to allow old/deprecated components.
                                 components.push(<any>new ComponentV1(c.type, c.params.value));
                             } else {

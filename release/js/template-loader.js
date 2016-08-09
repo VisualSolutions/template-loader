@@ -174,7 +174,7 @@ var Mvision;
                             var dataJson = JSON.parse(xhttp.responseText);
                             components = [];
                             dataJson.components.forEach(function (c) {
-                                if (typeof c.type !== 'undefined' && c.params) {
+                                if (typeof c.type === 'number' && c.params) {
                                     // Hack to allow old/deprecated components.
                                     components.push(new ComponentV1(c.type, c.params.value));
                                 }
