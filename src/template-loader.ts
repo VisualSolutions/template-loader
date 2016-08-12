@@ -62,6 +62,10 @@ module Mvision.Templates {
                 }, "*");
             }
         }
+
+        getParameter(key: string):string {
+            return null;
+        }
     }
 
 
@@ -79,11 +83,11 @@ module Mvision.Templates {
         constructor() {
             if (!window.Player) {
                 window.Player = new PreviewPlayer();
-                 window.addEventListener('message', (event) => {
-                     if (event && event.data && event.data.action && event.data.action === 'play') {
-                         this.play();
-                     }
-                 });
+                window.addEventListener('message', (event) => {
+                    if (event && event.data && event.data.action && event.data.action === 'play') {
+                        this.play();
+                    }
+                });
             }
             this.dataJson = this.getParameterByName(QueryStrings.Data);
             this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));
@@ -145,6 +149,15 @@ module Mvision.Templates {
 
         public finished() {
             window.Player.mediaFinished(this.playId);
+        }
+
+        public getPlayerParameter(key: string):string {
+            try {
+                return window.Player.getParameter(key);
+            } catch (err) {
+                // method not implemented
+            }
+            return null;
         }
 
         public play() {

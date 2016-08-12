@@ -77,6 +77,9 @@ var Mvision;
                     }, "*");
                 }
             };
+            PreviewPlayer.prototype.getParameter = function (key) {
+                return null;
+            };
             return PreviewPlayer;
         }());
         Templates.PreviewPlayer = PreviewPlayer;
@@ -141,6 +144,14 @@ var Mvision;
             };
             Loader.prototype.finished = function () {
                 window.Player.mediaFinished(this.playId);
+            };
+            Loader.prototype.getPlayerParameter = function (key) {
+                try {
+                    return window.Player.getParameter(key);
+                }
+                catch (err) {
+                }
+                return null;
             };
             Loader.prototype.play = function () {
                 if (!this.started) {
