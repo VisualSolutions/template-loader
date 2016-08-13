@@ -83,7 +83,7 @@
                             "tooltip": "Automatically generated default label."
                         }
                     },
-                    "value": "path/to/bundle/image.jpg",
+                    "value": ["path/to/bundle/image.jpg"],
                     "type": "mediaReference",
                     "typeOptions": {
                         "mediaType": 5
