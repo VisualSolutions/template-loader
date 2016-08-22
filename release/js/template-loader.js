@@ -116,6 +116,13 @@ var Mvision;
                 });
                 this.getDataJson();
             }
+            Loader.prototype.setComponents = function (components) {
+                var _this = this;
+                this.componentsPromise = new Promise(function (resolve, reject) {
+                    _this.componentsPromiseResolve = resolve;
+                    _this.componentsPromiseResolve(components);
+                });
+            };
             Loader.prototype.getComponents = function () {
                 return this.componentsPromise;
             };

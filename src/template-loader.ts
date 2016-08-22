@@ -79,7 +79,7 @@ module Mvision.Templates {
         private componentsPromiseResolve: (data: Component[]) => void;
         private startPromise: Promise;
         private startPromiseResolve: () => void;
-
+        
         constructor() {
             if (!window.Player) {
                 window.Player = new PreviewPlayer();
@@ -112,6 +112,13 @@ module Mvision.Templates {
                 this.componentsPromiseResolve = resolve;
             });
             this.getDataJson();
+        }
+
+        public setComponents(components:any): void {
+            this.componentsPromise = new Promise<Component[]>((resolve, reject) => {
+                this.componentsPromiseResolve = resolve;
+                this.componentsPromiseResolve(components);
+            });
         }
 
         public getComponents(): Promise<Component[]> {
