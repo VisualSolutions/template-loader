@@ -80,6 +80,8 @@ var Mvision;
             PreviewPlayer.prototype.getParameter = function (key) {
                 return null;
             };
+            PreviewPlayer.prototype.openUrlInZone = function (playId, url, zoneId) {
+            };
             return PreviewPlayer;
         }());
         Templates.PreviewPlayer = PreviewPlayer;
@@ -159,6 +161,13 @@ var Mvision;
                 catch (err) {
                 }
                 return null;
+            };
+            Loader.prototype.openUrlInZone = function (url, zoneId) {
+                try {
+                    window.Player.openUrlInZone(this.playId, url, zoneId);
+                }
+                catch (err) {
+                }
             };
             Loader.prototype.play = function () {
                 if (!this.started) {
