@@ -67,7 +67,7 @@ module Mvision.Templates {
             return null;
         }
 
-        openUrlInZone(playId: number, url: string, zoneId: number): void {
+        openMediaInZone(playId: number, mediaId: string, zoneId: number): void {
 
         }
     }
@@ -171,9 +171,9 @@ module Mvision.Templates {
             return null;
         }
 
-        public openUrlInZone(url: string, zoneId: number): void {
+        public openMediaInZone(mediaId: string, zoneId: number): void {
             try {
-                window.Player.openUrlInZone(this.playId, url, zoneId);
+                window.Player.openMediaInZone(this.playId, mediaId, zoneId);
             } catch (err) {
                 // method not implemented
             }

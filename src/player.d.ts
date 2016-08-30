@@ -4,7 +4,7 @@ declare namespace PlayerExternal {
         mediaError(playId: number, message: string): void;
         mediaReady(playId: number, started: boolean): void;
         getParameter(key: string): string;
-        openUrlInZone(playId: number, url: string, zoneId: number): void;
+        openMediaInZone(playId: number, mediaId: string, zoneId: number): void;
     }
 }
 

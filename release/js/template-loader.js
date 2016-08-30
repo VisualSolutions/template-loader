@@ -80,7 +80,7 @@ var Mvision;
             PreviewPlayer.prototype.getParameter = function (key) {
                 return null;
             };
-            PreviewPlayer.prototype.openUrlInZone = function (playId, url, zoneId) {
+            PreviewPlayer.prototype.openMediaInZone = function (playId, mediaId, zoneId) {
             };
             return PreviewPlayer;
         }());
@@ -162,9 +162,9 @@ var Mvision;
                 }
                 return null;
             };
-            Loader.prototype.openUrlInZone = function (url, zoneId) {
+            Loader.prototype.openMediaInZone = function (mediaId, zoneId) {
                 try {
-                    window.Player.openUrlInZone(this.playId, url, zoneId);
+                    window.Player.openMediaInZone(this.playId, mediaId, zoneId);
                 }
                 catch (err) {
                 }
