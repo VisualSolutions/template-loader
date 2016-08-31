@@ -66,8 +66,12 @@ module Mvision.Templates {
             }
         }
 
-        getParameter(key: string):string {
+        getParameter(key: string): string {
             return null;
+        }
+
+        openMediaInZone(playId: number, mediaId: string, zoneId: number): void {
+
         }
     }
 
@@ -82,7 +86,7 @@ module Mvision.Templates {
         private componentsPromiseResolve: (data: Component[]) => void;
         private startPromise: Promise;
         private startPromiseResolve: () => void;
-        
+
         constructor() {
             if (!window.Player) {
                 window.Player = new PreviewPlayer();
@@ -146,28 +150,36 @@ module Mvision.Templates {
             }
         }
 
-        public ready() {
+        public ready(): void {
             window.Player.mediaReady(this.playId, this.started);
         }
 
-        public error(message: string) {
+        public error(message: string): void {
             if (!message) {
                 message = "Unspecified error.";
             }
             window.Player.mediaError(this.playId, message);
         }
 
-        public finished() {
+        public finished(): void {
             window.Player.mediaFinished(this.playId);
         }
 
-        public getPlayerParameter(key: string):string {
+        public getPlayerParameter(key: string): string {
             try {
                 return window.Player.getParameter(key);
             } catch (err) {
                 // method not implemented
             }
             return null;
+        }
+
+        public openMediaInZone(mediaId: string, zoneId: number): void {
+            try {
+                window.Player.openMediaInZone(this.playId, mediaId, zoneId);
+            } catch (err) {
+                // method not implemented
+            }
         }
 
         public play() {

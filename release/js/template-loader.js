@@ -84,6 +84,8 @@ var Mvision;
             PreviewPlayer.prototype.getParameter = function (key) {
                 return null;
             };
+            PreviewPlayer.prototype.openMediaInZone = function (playId, mediaId, zoneId) {
+            };
             return PreviewPlayer;
         }());
         Templates.PreviewPlayer = PreviewPlayer;
@@ -163,6 +165,13 @@ var Mvision;
                 catch (err) {
                 }
                 return null;
+            };
+            Loader.prototype.openMediaInZone = function (mediaId, zoneId) {
+                try {
+                    window.Player.openMediaInZone(this.playId, mediaId, zoneId);
+                }
+                catch (err) {
+                }
             };
             Loader.prototype.play = function () {
                 if (!this.started) {
