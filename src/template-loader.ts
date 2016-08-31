@@ -21,7 +21,10 @@ module Mvision.Templates {
     }
 
     export class Component {
-        constructor(public name: string, public params: Param[]) {
+        static CreateTypelessComponent(name: string, params: Param[]) {
+            return new this(name, null, params);
+        }
+        constructor(public name: string, public type: string, public params: Param[]) {
         }
     }
 
@@ -201,8 +204,13 @@ module Mvision.Templates {
                             if (typeof c.type === 'number' && c.params) {
                                 // Hack to allow old/deprecated components.
                                 components.push(<any>new ComponentV1(c.type, c.params.value));
-                            } else {
-                            components.push(new Component(c.name, c.params.map(p => new Param(p.name, p.type, p.value))));
+                            }
+                            if (typeof c.type === 'string')
+                            {
+                                components.push(new Component(c.name, c.type, c.params.map(p => new Param(p.name, p.type, p.value))));
+                            }
+                            else {
+                                components.push(Component.CreateTypelessComponent(c.name, c.params.map(p => new Param(p.name, p.type, p.value))));
                             }
                         });
                     } catch (err) {

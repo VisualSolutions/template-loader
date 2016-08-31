@@ -30,10 +30,14 @@ var Mvision;
         }());
         Templates.Param = Param;
         var Component = (function () {
-            function Component(name, params) {
+            function Component(name, type, params) {
                 this.name = name;
+                this.type = type;
                 this.params = params;
             }
+            Component.CreateTypelessComponent = function (name, params) {
+                return new this(name, null, params);
+            };
             return Component;
         }());
         Templates.Component = Component;
@@ -196,8 +200,11 @@ var Mvision;
                                     // Hack to allow old/deprecated components.
                                     components.push(new ComponentV1(c.type, c.params.value));
                                 }
+                                if (typeof c.type === 'string') {
+                                    components.push(new Component(c.name, c.type, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
+                                }
                                 else {
-                                    components.push(new Component(c.name, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
+                                    components.push(Component.CreateTypelessComponent(c.name, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
                                 }
                             });
                         }
