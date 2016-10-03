@@ -20,6 +20,12 @@ var Mvision;
             return PlaybackConstants;
         }());
         Templates.PlaybackConstants = PlaybackConstants;
+        var PlaybackCommands = (function () {
+            function PlaybackCommands() {
+            }
+            PlaybackCommands.OpenMediaInZone = 'openMediaInZone';
+            return PlaybackCommands;
+        }());
         var Param = (function () {
             function Param(name, type, value) {
                 this.name = name;
@@ -85,6 +91,8 @@ var Mvision;
                 return null;
             };
             PreviewPlayer.prototype.openMediaInZone = function (playId, mediaId, zoneId) {
+            };
+            PreviewPlayer.prototype.executeCommand = function (playId, commandName, commandParamsJson) {
             };
             return PreviewPlayer;
         }());
@@ -166,9 +174,16 @@ var Mvision;
                 }
                 return null;
             };
-            Loader.prototype.openMediaInZone = function (mediaId, zoneId) {
+            Loader.prototype.openMediaInZone = function (mediaId, zoneId, loop) {
+                if (loop === void 0) { loop = false; }
                 try {
-                    window.Player.openMediaInZone(this.playId, mediaId, zoneId);
+                    if (!loop) {
+                        // deprecated
+                        window.Player.openMediaInZone(this.playId, mediaId, zoneId);
+                    }
+                    else {
+                        window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone, JSON.stringify({ mediaId: mediaId, zoneId: zoneId, loop: loop }));
+                    }
                 }
                 catch (err) {
                 }

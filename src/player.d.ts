@@ -5,6 +5,7 @@ declare namespace PlayerExternal {
         mediaReady(playId: number, started: boolean): void;
         getParameter(key: string): string;
         openMediaInZone(playId: number, mediaId: string, zoneId: number): void;
+        executeCommand(playId: number, commandName: string, commandParamsJson: string): void;
     }
 }
 

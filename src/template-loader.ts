@@ -15,6 +15,10 @@ module Mvision.Templates {
         public static DurationAuto = -1;
     }
 
+    class PlaybackCommands {
+        public static OpenMediaInZone = 'openMediaInZone';
+    }
+
     export class Param {
         constructor(public name: string, public type: string, public value: any) {
         }
@@ -71,6 +75,10 @@ module Mvision.Templates {
         }
 
         openMediaInZone(playId: number, mediaId: string, zoneId: number): void {
+
+        }
+
+        executeCommand(playId: number, commandName: string, commandParamsJson: string): void {
 
         }
     }
@@ -174,9 +182,16 @@ module Mvision.Templates {
             return null;
         }
 
-        public openMediaInZone(mediaId: string, zoneId: number): void {
+        public openMediaInZone(mediaId: string, zoneId: number, loop = false): void {
             try {
-                window.Player.openMediaInZone(this.playId, mediaId, zoneId);
+                if (!loop) {
+                    // legacy method, for android players with version 5.4.2-190102
+                    // should delete this conditional in the future
+                    window.Player.openMediaInZone(this.playId, mediaId, zoneId);
+                } else {
+                    window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone,
+                            JSON.stringify({mediaId:mediaId, zoneId:zoneId, loop:loop}));
+                }
             } catch (err) {
                 // method not implemented
             }
