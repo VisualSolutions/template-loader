@@ -178,7 +178,8 @@ var Mvision;
                 if (loop === void 0) { loop = false; }
                 try {
                     if (!loop) {
-                        // deprecated
+                        // legacy method, for android players with version 5.4.2-190102
+                        // should delete this conditional in the future
                         window.Player.openMediaInZone(this.playId, mediaId, zoneId);
                     }
                     else {
