@@ -6,6 +6,7 @@ declare namespace PlayerExternal {
         getParameter(key: string): string;
         openMediaInZone(playId: number, mediaId: string, zoneId: number): void;
         executeCommand(playId: number, commandName: string, commandParamsJson: string): void;
+        addPlaybackListener(playId: number, callbackFunction: string): void;
     }
 }
 

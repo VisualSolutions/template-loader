@@ -94,6 +94,8 @@ var Mvision;
             };
             PreviewPlayer.prototype.executeCommand = function (playId, commandName, commandParamsJson) {
             };
+            PreviewPlayer.prototype.addPlaybackListener = function (playId, callbackFunction) {
+            };
             return PreviewPlayer;
         }());
         Templates.PreviewPlayer = PreviewPlayer;
@@ -185,6 +187,13 @@ var Mvision;
                     else {
                         window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone, JSON.stringify({ mediaId: mediaId, zoneId: zoneId, loop: loop }));
                     }
+                }
+                catch (err) {
+                }
+            };
+            Loader.prototype.addPlaybackListener = function (callbackFunction) {
+                try {
+                    window.Player.addPlaybackListener(this.playId, callbackFunction.name);
                 }
                 catch (err) {
                 }

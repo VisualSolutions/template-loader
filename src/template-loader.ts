@@ -81,6 +81,10 @@ module Mvision.Templates {
         executeCommand(playId: number, commandName: string, commandParamsJson: string): void {
 
         }
+
+        addPlaybackListener(playId: number, callbackFunction: string): void {
+
+        }
     }
 
 
@@ -192,6 +196,14 @@ module Mvision.Templates {
                     window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone,
                             JSON.stringify({mediaId:mediaId, zoneId:zoneId, loop:loop}));
                 }
+            } catch (err) {
+                // method not implemented
+            }
+        }
+
+        public addPlaybackListener(callbackFunction): void {
+            try {
+                window.Player.addPlaybackListener(this.playId, callbackFunction.name);
             } catch (err) {
                 // method not implemented
             }
