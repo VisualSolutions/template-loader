@@ -17,6 +17,7 @@ module Mvision.Templates {
 
     class PlaybackCommands {
         public static OpenMediaInZone = 'openMediaInZone';
+        public static PlaybackActionInZone = 'playbackActionInZone';
     }
 
     export class Param {
@@ -196,6 +197,23 @@ module Mvision.Templates {
                     window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone,
                             JSON.stringify({mediaId:mediaId, zoneId:zoneId, loop:loop}));
                 }
+            } catch (err) {
+                // method not implemented
+            }
+        }
+
+        public stopPlaybackInZone(zoneId: number): void {
+            this.executePlaybackActionInZone("STOP", zoneId);
+        }
+
+        public resumeLoopPlaybackInZone(zoneId: number): void {
+            this.executePlaybackActionInZone("RESUME_LOOP_PLAYBACK", zoneId);
+        }
+
+        private executePlaybackActionInZone(action: string, zoneId: number) {
+            try {
+                window.Player.executeCommand(this.playId, PlaybackCommands.PlaybackActionInZone,
+                        JSON.stringify({type:action, zoneId:zoneId}));
             } catch (err) {
                 // method not implemented
             }

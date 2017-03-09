@@ -24,6 +24,7 @@ var Mvision;
             function PlaybackCommands() {
             }
             PlaybackCommands.OpenMediaInZone = 'openMediaInZone';
+            PlaybackCommands.PlaybackActionInZone = 'playbackActionInZone';
             return PlaybackCommands;
         }());
         var Param = (function () {
@@ -187,6 +188,19 @@ var Mvision;
                     else {
                         window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone, JSON.stringify({ mediaId: mediaId, zoneId: zoneId, loop: loop }));
                     }
+                }
+                catch (err) {
+                }
+            };
+            Loader.prototype.stopPlaybackInZone = function (zoneId) {
+                this.executePlaybackActionInZone("STOP", zoneId);
+            };
+            Loader.prototype.resumeLoopPlaybackInZone = function (zoneId) {
+                this.executePlaybackActionInZone("RESUME_LOOP_PLAYBACK", zoneId);
+            };
+            Loader.prototype.executePlaybackActionInZone = function (action, zoneId) {
+                try {
+                    window.Player.executeCommand(this.playId, PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: action, zoneId: zoneId }));
                 }
                 catch (err) {
                 }
