@@ -238,33 +238,69 @@ var Mvision;
                 }
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
-                    if (xhttp.readyState === 4 && xhttp.status === 200) {
-                        var components;
-                        try {
-                            var dataJson = JSON.parse(xhttp.responseText);
-                            components = [];
-                            dataJson.components.forEach(function (c) {
-                                if (typeof c.type === 'number' && c.params) {
-                                    // Hack to allow old/deprecated components.
-                                    components.push(new ComponentV1(c.type, c.params.value));
-                                }
-                                if (typeof c.type === 'string') {
-                                    components.push(new Component(c.name, c.type, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
+                    if (_this.platformType === "tizen") {
+                        if (xhttp.readyState === 4) {
+                            if (xhttp.status === 200 || xhttp.status === 0) {
+                                if (xhttp.responseText !== null) {
+                                    try {
+                                        var dataJson = JSON.parse(xhttp.responseText);
+                                        components = [];
+                                        dataJson.components.forEach(function (c) {
+                                            if (typeof c.type === 'number' && c.params) {
+                                                // Hack to allow old/deprecated components.
+                                                components.push(new ComponentV1(c.type, c.params.value));
+                                            }
+                                            if (typeof c.type === 'string') {
+                                                components.push(new Component(c.name, c.type, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
+                                            }
+                                            else {
+                                                components.push(Component.CreateTypelessComponent(c.name, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
+                                            }
+                                        });
+                                    }
+                                    catch (err) {
+                                        _this.error("Error parsing " + mframeUrl + ": " + err.toString());
+                                        return;
+                                    }
+                                    _this.componentsPromiseResolve(components);
                                 }
                                 else {
-                                    components.push(Component.CreateTypelessComponent(c.name, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
+                                    xhttp.open('GET', mframeUrl);
+                                    xhttp.send();
                                 }
-                            });
+                            }
                         }
-                        catch (err) {
-                            _this.error("Error parsing " + mframeUrl + ": " + err.toString());
-                            return;
+                    }
+                    else {
+                        if (xhttp.readyState === 4 && xhttp.status === 200) {
+                            var components;
+                            try {
+                                var dataJson = JSON.parse(xhttp.responseText);
+                                components = [];
+                                dataJson.components.forEach(function (c) {
+                                    if (typeof c.type === 'number' && c.params) {
+                                        // Hack to allow old/deprecated components.
+                                        components.push(new ComponentV1(c.type, c.params.value));
+                                    }
+                                    if (typeof c.type === 'string') {
+                                        components.push(new Component(c.name, c.type, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
+                                    }
+                                    else {
+                                        components.push(Component.CreateTypelessComponent(c.name, c.params.map(function (p) { return new Param(p.name, p.type, p.value); })));
+                                    }
+                                });
+                            }
+                            catch (err) {
+                                _this.error("Error parsing " + mframeUrl + ": " + err.toString());
+                                return;
+                            }
+                            _this.componentsPromiseResolve(components);
                         }
-                        _this.componentsPromiseResolve(components);
+                        else if (xhttp.readyState === 4) {
+                            _this.error("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
+                        }
                     }
-                    else if (xhttp.readyState === 4) {
-                        _this.error("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
-                    }
+                    ;
                 };
                 xhttp.open('GET', mframeUrl);
                 xhttp.send();
