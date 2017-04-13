@@ -1,24 +1,24 @@
 {
-  "name": "mtemplate-loader",
-  "version": "1.0.10",
-  "description": "Template Loader / mframe parser",
-  "main": "template-loader.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/VisualSolutions/template-loader.git"
-  },
-  "author": "Vladimir Ciobanu",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/VisualSolutions/template-loader/issues"
-  },
-  "homepage": "https://github.com/VisualSolutions/template-loader#readme",
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-typescript": "^2.13.4",
-    "merge2": "^1.0.2"
-  }
+    "name": "mtemplate-loader",
+    "version": "1.0.11",
+    "description": "Template Loader / mframe parser",
+    "main": "template-loader.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/VisualSolutions/template-loader.git"
+    },
+    "author": "Vladimir Ciobanu",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/VisualSolutions/template-loader/issues"
+    },
+    "homepage": "https://github.com/VisualSolutions/template-loader#readme",
+    "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-typescript": "^2.13.4",
+        "merge2": "^1.0.2"
+    }
 }
