@@ -18,6 +18,9 @@ module Mvision.Templates {
     class PlaybackCommands {
         public static OpenMediaInZone = 'openMediaInZone';
         public static PlaybackActionInZone = 'playbackActionInZone';
+        public static PlaylistDataRequest = 'playlistDataRequest';
+        public static VotingPlaylistRequest = 'votingPlaylistRequest';
+        public static RegisterNotifications = 'registerNotifications';
     }
 
     export class Param {
@@ -187,15 +190,15 @@ module Mvision.Templates {
             return null;
         }
 
-        public openMediaInZone(mediaId: string, zoneId: number, loop = false): void {
+        public openMediaInZone(mediaId: string, zoneId: number, loop: boolean = false, startMode: string = null): void {
             try {
-                if (!loop) {
+                if (!loop && !startMode) {
                     // legacy method, for android players with version 5.4.2-190102
                     // should delete this conditional in the future
                     window.Player.openMediaInZone(this.playId, mediaId, zoneId);
                 } else {
                     window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone,
-                            JSON.stringify({mediaId:mediaId, zoneId:zoneId, loop:loop}));
+                            JSON.stringify({mediaId:mediaId, zoneId:zoneId, loop:loop, startMode: startMode}));
                 }
             } catch (err) {
                 // method not implemented
@@ -210,18 +213,51 @@ module Mvision.Templates {
             this.executePlaybackActionInZone("RESUME_LOOP_PLAYBACK", zoneId);
         }
 
-        private executePlaybackActionInZone(action: string, zoneId: number) {
-            try {
-                window.Player.executeCommand(this.playId, PlaybackCommands.PlaybackActionInZone,
-                        JSON.stringify({type:action, zoneId:zoneId}));
-            } catch (err) {
-                // method not implemented
-            }
+        public clearPendingEventsInZone(zoneId: number): void {
+            this.executePlaybackActionInZone("CLEAR_PENDING_EVENTS", zoneId);
+        }
+
+        public getMusicStreamTracks(callbackFunction): void {
+            window.Player.executeCommand(this.playId, PlaybackCommands.PlaylistDataRequest,
+                JSON.stringify({dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name}));
+        }
+
+        public getPlaylistContainerItems(playlistId: number, callbackFunction): void {
+            window.Player.executeCommand(this.playId, PlaybackCommands.PlaylistDataRequest,
+                JSON.stringify({dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name}));
+        }
+
+        public voteMusicTrack(id: number): void {
+            window.Player.executeCommand(this.playId, PlaybackCommands.VotingPlaylistRequest,
+                JSON.stringify({action: "VOTE", referenceItem: id}));
+        }
+
+        public getVotedTracks(callbackFunction): void {
+            window.Player.executeCommand(this.playId, PlaybackCommands.VotingPlaylistRequest,
+                JSON.stringify({action: "GET_VOTED_ITEMS", responseCallbackMethod: callbackFunction.name}));
         }
 
         public addPlaybackListener(callbackFunction): void {
             try {
                 window.Player.addPlaybackListener(this.playId, callbackFunction.name);
+            } catch (err) {
+                // method not implemented
+            }
+        }
+
+        public addPlaylistUpdateListener(callbackFunction): void {
+            try {
+                window.Player.executeCommand(this.playId, PlaybackCommands.RegisterNotifications,
+                        JSON.stringify({notificationType:"PLAYBACK_STREAM_UPDATED", callbackMethod:callbackFunction.name}));
+            } catch (err) {
+                // method not implemented
+            }
+        }
+
+        private executePlaybackActionInZone(action: string, zoneId: number) {
+            try {
+                window.Player.executeCommand(this.playId, PlaybackCommands.PlaybackActionInZone,
+                        JSON.stringify({type:action, zoneId:zoneId}));
             } catch (err) {
                 // method not implemented
             }

@@ -25,6 +25,9 @@ var Mvision;
             }
             PlaybackCommands.OpenMediaInZone = 'openMediaInZone';
             PlaybackCommands.PlaybackActionInZone = 'playbackActionInZone';
+            PlaybackCommands.PlaylistDataRequest = 'playlistDataRequest';
+            PlaybackCommands.VotingPlaylistRequest = 'votingPlaylistRequest';
+            PlaybackCommands.RegisterNotifications = 'registerNotifications';
             return PlaybackCommands;
         }());
         var Param = (function () {
@@ -177,16 +180,17 @@ var Mvision;
                 }
                 return null;
             };
-            Loader.prototype.openMediaInZone = function (mediaId, zoneId, loop) {
+            Loader.prototype.openMediaInZone = function (mediaId, zoneId, loop, startMode) {
                 if (loop === void 0) { loop = false; }
+                if (startMode === void 0) { startMode = null; }
                 try {
-                    if (!loop) {
+                    if (!loop && !startMode) {
                         // legacy method, for android players with version 5.4.2-190102
                         // should delete this conditional in the future
                         window.Player.openMediaInZone(this.playId, mediaId, zoneId);
                     }
                     else {
-                        window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone, JSON.stringify({ mediaId: mediaId, zoneId: zoneId, loop: loop }));
+                        window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone, JSON.stringify({ mediaId: mediaId, zoneId: zoneId, loop: loop, startMode: startMode }));
                     }
                 }
                 catch (err) {
@@ -198,16 +202,38 @@ var Mvision;
             Loader.prototype.resumeLoopPlaybackInZone = function (zoneId) {
                 this.executePlaybackActionInZone("RESUME_LOOP_PLAYBACK", zoneId);
             };
-            Loader.prototype.executePlaybackActionInZone = function (action, zoneId) {
-                try {
-                    window.Player.executeCommand(this.playId, PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: action, zoneId: zoneId }));
-                }
-                catch (err) {
-                }
+            Loader.prototype.clearPendingEventsInZone = function (zoneId) {
+                this.executePlaybackActionInZone("CLEAR_PENDING_EVENTS", zoneId);
+            };
+            Loader.prototype.getMusicStreamTracks = function (callbackFunction) {
+                window.Player.executeCommand(this.playId, PlaybackCommands.PlaylistDataRequest, JSON.stringify({ dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name }));
+            };
+            Loader.prototype.getPlaylistContainerItems = function (playlistId, callbackFunction) {
+                window.Player.executeCommand(this.playId, PlaybackCommands.PlaylistDataRequest, JSON.stringify({ dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name }));
+            };
+            Loader.prototype.voteMusicTrack = function (id) {
+                window.Player.executeCommand(this.playId, PlaybackCommands.VotingPlaylistRequest, JSON.stringify({ action: "VOTE", referenceItem: id }));
+            };
+            Loader.prototype.getVotedTracks = function (callbackFunction) {
+                window.Player.executeCommand(this.playId, PlaybackCommands.VotingPlaylistRequest, JSON.stringify({ action: "GET_VOTED_ITEMS", responseCallbackMethod: callbackFunction.name }));
             };
             Loader.prototype.addPlaybackListener = function (callbackFunction) {
                 try {
                     window.Player.addPlaybackListener(this.playId, callbackFunction.name);
+                }
+                catch (err) {
+                }
+            };
+            Loader.prototype.addPlaylistUpdateListener = function (callbackFunction) {
+                try {
+                    window.Player.executeCommand(this.playId, PlaybackCommands.RegisterNotifications, JSON.stringify({ notificationType: "PLAYBACK_STREAM_UPDATED", callbackMethod: callbackFunction.name }));
+                }
+                catch (err) {
+                }
+            };
+            Loader.prototype.executePlaybackActionInZone = function (action, zoneId) {
+                try {
+                    window.Player.executeCommand(this.playId, PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: action, zoneId: zoneId }));
                 }
                 catch (err) {
                 }
