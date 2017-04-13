@@ -22,8 +22,7 @@
   build_script:
     - gulp scripts
   after_build:
-    - ps: "//registry.npmjs.org/:_authToken=`$`{NPM_TOKEN`}" | Out-File (Join-Path $ENV:APPVEYOR_BUILD_FOLDER ".npmrc") -Encoding UTF8
-    - ps: npm publish
+    - ps: .\publish.ps1
   notifications:
   - provider: Email
     to:
