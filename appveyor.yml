@@ -19,9 +19,12 @@
     - npm install
     - npm install -g gulp
     - npm install -g typescript
+  build_script:
     - gulp scripts
-    - npm publish
-  build: off
+  after_build:
+    - ps: |
+      "//registry.npmjs.org/:_authToken=`$`{NPM_TOKEN`}" | Out-File (Join-Path $ENV:APPVEYOR_BUILD_FOLDER ".npmrc") -Encoding UTF8
+      iex publish
   notifications:
   - provider: Email
     to:
