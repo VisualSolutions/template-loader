@@ -17,10 +17,9 @@
       secure: QqWV2LDQ3nnxqDJ318EUf9FmF0kVWvLblsvvAA2+NH55/rcG9CCoL8jI/mffOKw9
   install:
     - npm install
-  build: off
-  after_build:
     - gulp scripts
     - npm publish
+  build: off
   notifications:
   - provider: Email
     to:
