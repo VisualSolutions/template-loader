@@ -28,6 +28,12 @@ var Mvision;
             PlaybackCommands.PlaylistDataRequest = 'playlistDataRequest';
             PlaybackCommands.VotingPlaylistRequest = 'votingPlaylistRequest';
             PlaybackCommands.RegisterNotifications = 'registerNotifications';
+            PlaybackCommands.CreateCustomZone = 'createCustomZone';
+            PlaybackCommands.DeleteCustomZone = 'deleteCustomZone';
+            PlaybackCommands.ClosePlaybackApp = 'closePlaybackApp';
+            PlaybackCommands.OpenHomeApp = 'openHomeApp';
+            PlaybackCommands.OpenVodApp = 'openVodApp';
+            PlaybackCommands.OpenApp = 'openApp';
             return PlaybackCommands;
         }());
         var Param = (function () {
@@ -190,52 +196,82 @@ var Mvision;
                         window.Player.openMediaInZone(this.playId, mediaId, zoneId);
                     }
                     else {
-                        window.Player.executeCommand(this.playId, PlaybackCommands.OpenMediaInZone, JSON.stringify({ mediaId: mediaId, zoneId: zoneId, loop: loop, startMode: startMode }));
+                        this.executeCommand(PlaybackCommands.OpenMediaInZone, JSON.stringify({ mediaId: mediaId, zoneId: zoneId, loop: loop, startMode: startMode }));
                     }
                 }
                 catch (err) {
                 }
             };
             Loader.prototype.stopPlaybackInZone = function (zoneId) {
-                this.executePlaybackActionInZone("STOP", zoneId);
+                this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: "STOP", zoneId: zoneId }));
             };
             Loader.prototype.resumeLoopPlaybackInZone = function (zoneId) {
-                this.executePlaybackActionInZone("RESUME_LOOP_PLAYBACK", zoneId);
+                this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: "RESUME_LOOP_PLAYBACK", zoneId: zoneId }));
             };
             Loader.prototype.clearPendingEventsInZone = function (zoneId) {
-                this.executePlaybackActionInZone("CLEAR_PENDING_EVENTS", zoneId);
+                this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: "CLEAR_PENDING_EVENTS", zoneId: zoneId }));
+            };
+            Loader.prototype.createCustomZone = function (zoneName, left, top, width, height, persistent) {
+                this.executeCommand(PlaybackCommands.CreateCustomZone, JSON.stringify({ zoneName: zoneName, persistent: persistent, coordinates: { left: left, top: top, width: width, height: height } }));
+            };
+            Loader.prototype.deleteCustomZone = function (zoneName) {
+                this.executeCommand(PlaybackCommands.DeleteCustomZone, JSON.stringify({ zoneName: zoneName }));
+            };
+            Loader.prototype.openMediaInCustomZone = function (mediaId, zoneName, loop, startMode) {
+                if (loop === void 0) { loop = false; }
+                if (startMode === void 0) { startMode = null; }
+                this.executeCommand(PlaybackCommands.OpenMediaInZone, JSON.stringify({ mediaId: mediaId, zoneName: zoneName, loop: loop, startMode: startMode }));
+            };
+            Loader.prototype.stopPlaybackInCustomZone = function (zoneName) {
+                this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: "STOP", zoneName: zoneName }));
+            };
+            Loader.prototype.resumeLoopPlaybackInCustomZone = function (zoneName) {
+                this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: "RESUME_LOOP_PLAYBACK", zoneName: zoneName }));
+            };
+            Loader.prototype.clearPendingEventsInCustomZone = function (zoneName) {
+                this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: "CLEAR_PENDING_EVENTS", zoneName: zoneName }));
+            };
+            Loader.prototype.closePlaybackApp = function () {
+                this.executeCommand(PlaybackCommands.ClosePlaybackApp, "{}");
+            };
+            Loader.prototype.openHomeApp = function () {
+                this.executeCommand(PlaybackCommands.OpenHomeApp, "{}");
+            };
+            Loader.prototype.openVodApp = function () {
+                this.executeCommand(PlaybackCommands.OpenVodApp, "{}");
+            };
+            Loader.prototype.openApp = function (appId) {
+                this.executeCommand(PlaybackCommands.OpenApp, JSON.stringify({ appId: appId }));
             };
             Loader.prototype.getMusicStreamTracks = function (callbackFunction) {
-                window.Player.executeCommand(this.playId, PlaybackCommands.PlaylistDataRequest, JSON.stringify({ dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name }));
+                this.executeCommand(PlaybackCommands.PlaylistDataRequest, JSON.stringify({ dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name }));
             };
             Loader.prototype.getPlaylistContainerItems = function (playlistId, callbackFunction) {
-                window.Player.executeCommand(this.playId, PlaybackCommands.PlaylistDataRequest, JSON.stringify({ dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name }));
+                this.executeCommand(PlaybackCommands.PlaylistDataRequest, JSON.stringify({ dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name }));
             };
             Loader.prototype.voteMusicTrack = function (id) {
-                window.Player.executeCommand(this.playId, PlaybackCommands.VotingPlaylistRequest, JSON.stringify({ action: "VOTE", referenceItem: id }));
+                this.executeCommand(PlaybackCommands.VotingPlaylistRequest, JSON.stringify({ action: "VOTE", referenceItem: id }));
             };
             Loader.prototype.getVotedTracks = function (callbackFunction) {
-                window.Player.executeCommand(this.playId, PlaybackCommands.VotingPlaylistRequest, JSON.stringify({ action: "GET_VOTED_ITEMS", responseCallbackMethod: callbackFunction.name }));
+                this.executeCommand(PlaybackCommands.VotingPlaylistRequest, JSON.stringify({ action: "GET_VOTED_ITEMS", responseCallbackMethod: callbackFunction.name }));
             };
             Loader.prototype.addPlaybackListener = function (callbackFunction) {
                 try {
                     window.Player.addPlaybackListener(this.playId, callbackFunction.name);
                 }
                 catch (err) {
+                    console.log("Error while calling Player method: " + err);
                 }
             };
             Loader.prototype.addPlaylistUpdateListener = function (callbackFunction) {
-                try {
-                    window.Player.executeCommand(this.playId, PlaybackCommands.RegisterNotifications, JSON.stringify({ notificationType: "PLAYBACK_STREAM_UPDATED", callbackMethod: callbackFunction.name }));
-                }
-                catch (err) {
-                }
+                this.executeCommand(PlaybackCommands.RegisterNotifications, JSON.stringify({ notificationType: "PLAYBACK_STREAM_UPDATED", callbackMethod: callbackFunction.name }));
             };
-            Loader.prototype.executePlaybackActionInZone = function (action, zoneId) {
+            Loader.prototype.executeCommand = function (commandName, commandParamsJson) {
                 try {
-                    window.Player.executeCommand(this.playId, PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: action, zoneId: zoneId }));
+                    window.Player.executeCommand(this.playId, commandName, commandParamsJson);
                 }
                 catch (err) {
+                    console.log("Error while calling Player method: " + err);
                 }
             };
             Loader.prototype.play = function () {

@@ -1,6 +1,6 @@
 {
     "name": "mtemplate-loader",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "description": "Template Loader / mframe parser",
     "main": "template-loader.js",
     "scripts": {
