@@ -33,6 +33,8 @@ var Mvision;
             PlaybackCommands.ClosePlaybackApp = 'closePlaybackApp';
             PlaybackCommands.OpenHomeApp = 'openHomeApp';
             PlaybackCommands.OpenVodApp = 'openVodApp';
+            PlaybackCommands.OpenDiagnosticsApp = 'openDiagnosticsApp';
+            PlaybackCommands.OpenSettingsApp = 'openSettingsApp';
             PlaybackCommands.OpenApp = 'openApp';
             return PlaybackCommands;
         }());
@@ -239,6 +241,12 @@ var Mvision;
             };
             Loader.prototype.openVodApp = function () {
                 this.executeCommand(PlaybackCommands.OpenVodApp, "{}");
+            };
+            Loader.prototype.openDiagnosticsApp = function () {
+                this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, "{}");
+            };
+            Loader.prototype.openSettingsApp = function () {
+                this.executeCommand(PlaybackCommands.OpenSettingsApp, "{}");
             };
             Loader.prototype.openApp = function (appId) {
                 this.executeCommand(PlaybackCommands.OpenApp, JSON.stringify({ appId: appId }));

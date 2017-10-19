@@ -26,6 +26,8 @@ module Mvision.Templates {
         public static ClosePlaybackApp = 'closePlaybackApp';
         public static OpenHomeApp = 'openHomeApp';
         public static OpenVodApp = 'openVodApp';
+        public static OpenDiagnosticsApp = 'openDiagnosticsApp';
+        public static OpenSettingsApp = 'openSettingsApp';
         public static OpenApp = 'openApp';
     }
 
@@ -258,6 +260,14 @@ module Mvision.Templates {
 
         public openVodApp(): void {
             this.executeCommand(PlaybackCommands.OpenVodApp, "{}");
+        }
+
+        public openDiagnosticsApp(): void {
+            this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, "{}");
+        }
+
+        public openSettingsApp(): void {
+            this.executeCommand(PlaybackCommands.OpenSettingsApp, "{}");
         }
 
         public openApp(appId:String): void {
