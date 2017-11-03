@@ -11,14 +11,13 @@
   init:
     - ps: Install-Product node $env:nodejs_version
   environment:
-    nodejs_version: 6.3.0
+    nodejs_version: 8.9.0
     GIT_TERMINAL_PROMPT: 0
     NPM_TOKEN:
       secure: QqWV2LDQ3nnxqDJ318EUf9FmF0kVWvLblsvvAA2+NH55/rcG9CCoL8jI/mffOKw9
   install:
     - npm install
     - npm install -g gulp
-    - npm install -g typescript
   build_script:
     - gulp scripts
   after_build:

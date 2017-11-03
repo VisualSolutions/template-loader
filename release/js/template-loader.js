@@ -3,7 +3,7 @@ var Mvision;
 (function (Mvision) {
     var Templates;
     (function (Templates) {
-        var QueryStrings = (function () {
+        var QueryStrings = /** @class */ (function () {
             function QueryStrings() {
             }
             QueryStrings.Data = 'data';
@@ -13,14 +13,14 @@ var Mvision;
             QueryStrings.Duration = 'duration';
             return QueryStrings;
         }());
-        var PlaybackConstants = (function () {
+        var PlaybackConstants = /** @class */ (function () {
             function PlaybackConstants() {
             }
             PlaybackConstants.DurationAuto = -1;
             return PlaybackConstants;
         }());
         Templates.PlaybackConstants = PlaybackConstants;
-        var PlaybackCommands = (function () {
+        var PlaybackCommands = /** @class */ (function () {
             function PlaybackCommands() {
             }
             PlaybackCommands.OpenMediaInZone = 'openMediaInZone';
@@ -38,7 +38,7 @@ var Mvision;
             PlaybackCommands.OpenApp = 'openApp';
             return PlaybackCommands;
         }());
-        var Param = (function () {
+        var Param = /** @class */ (function () {
             function Param(name, type, value) {
                 this.name = name;
                 this.type = type;
@@ -47,7 +47,7 @@ var Mvision;
             return Param;
         }());
         Templates.Param = Param;
-        var Component = (function () {
+        var Component = /** @class */ (function () {
             function Component(name, type, params) {
                 this.name = name;
                 this.type = type;
@@ -59,7 +59,7 @@ var Mvision;
             return Component;
         }());
         Templates.Component = Component;
-        var ComponentV1 = (function () {
+        var ComponentV1 = /** @class */ (function () {
             function ComponentV1(type, value) {
                 this.type = type;
                 this.value = value;
@@ -67,7 +67,7 @@ var Mvision;
             return ComponentV1;
         }());
         Templates.ComponentV1 = ComponentV1;
-        var PreviewPlayer = (function () {
+        var PreviewPlayer = /** @class */ (function () {
             function PreviewPlayer() {
             }
             PreviewPlayer.prototype.mediaFinished = function (playId) {
@@ -111,7 +111,7 @@ var Mvision;
             return PreviewPlayer;
         }());
         Templates.PreviewPlayer = PreviewPlayer;
-        var Loader = (function () {
+        var Loader = /** @class */ (function () {
             function Loader() {
                 var _this = this;
                 if (!window.Player) {
@@ -185,6 +185,7 @@ var Mvision;
                     return window.Player.getParameter(key);
                 }
                 catch (err) {
+                    // method not implemented
                 }
                 return null;
             };
@@ -202,6 +203,7 @@ var Mvision;
                     }
                 }
                 catch (err) {
+                    // method not implemented
                 }
             };
             Loader.prototype.stopPlaybackInZone = function (zoneId) {
