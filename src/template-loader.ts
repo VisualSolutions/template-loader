@@ -225,8 +225,8 @@ module Mvision.Templates {
             this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({type:"CLEAR_PENDING_EVENTS", zoneId:zoneId}));
         }
 
-        public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean): void {
-            this.executeCommand(PlaybackCommands.CreateCustomZone, JSON.stringify({zoneName:zoneName, persistent:persistent, coordinates:{left:left, top:top, width:width, height:height}}));
+        public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean, behind: boolean = false): void {
+            this.executeCommand(PlaybackCommands.CreateCustomZone, JSON.stringify({zoneName:zoneName, behind:behind, persistent:persistent, coordinates:{left:left, top:top, width:width, height:height}}));
         }
 
         public deleteCustomZone(zoneName: string): void {

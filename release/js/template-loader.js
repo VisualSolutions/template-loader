@@ -215,8 +215,9 @@ var Mvision;
             Loader.prototype.clearPendingEventsInZone = function (zoneId) {
                 this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({ type: "CLEAR_PENDING_EVENTS", zoneId: zoneId }));
             };
-            Loader.prototype.createCustomZone = function (zoneName, left, top, width, height, persistent) {
-                this.executeCommand(PlaybackCommands.CreateCustomZone, JSON.stringify({ zoneName: zoneName, persistent: persistent, coordinates: { left: left, top: top, width: width, height: height } }));
+            Loader.prototype.createCustomZone = function (zoneName, left, top, width, height, persistent, behind) {
+                if (behind === void 0) { behind = false; }
+                this.executeCommand(PlaybackCommands.CreateCustomZone, JSON.stringify({ zoneName: zoneName, behind: behind, persistent: persistent, coordinates: { left: left, top: top, width: width, height: height } }));
             };
             Loader.prototype.deleteCustomZone = function (zoneName) {
                 this.executeCommand(PlaybackCommands.DeleteCustomZone, JSON.stringify({ zoneName: zoneName }));
