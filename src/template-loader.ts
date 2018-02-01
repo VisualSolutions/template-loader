@@ -29,6 +29,8 @@ module Mvision.Templates {
         public static OpenDiagnosticsApp = 'openDiagnosticsApp';
         public static OpenSettingsApp = 'openSettingsApp';
         public static OpenApp = 'openApp';
+        public static SendChannelMessage = 'sendChannelMessage';
+        public static JoinChannel = 'joinChannel';
     }
 
     export class Param {
@@ -305,6 +307,16 @@ module Mvision.Templates {
         public addPlaylistUpdateListener(callbackFunction): void {
             this.executeCommand(PlaybackCommands.RegisterNotifications,
                     JSON.stringify({notificationType:"PLAYBACK_STREAM_UPDATED", callbackMethod:callbackFunction.name}));
+        }
+        
+        public sendChannelMessage(clientId: string, channelName: string, payload: string): void {
+            this.executeCommand(PlaybackCommands.SendChannelMessage,
+                JSON.stringify({clientId:clientId, channelName:channelName, payload:payload}));
+        }
+
+        public joinChannel(clientId: string, channelName: string, callbackFunction): void {
+            this.executeCommand(PlaybackCommands.JoinChannel,
+                JSON.stringify({clientId:clientId, channelName:channelName, callbackMethod:callbackFunction.name}));
         }
 
         public executeCommand(commandName: string, commandParamsJson: string): void {

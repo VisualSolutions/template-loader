@@ -36,6 +36,8 @@ var Mvision;
             PlaybackCommands.OpenDiagnosticsApp = 'openDiagnosticsApp';
             PlaybackCommands.OpenSettingsApp = 'openSettingsApp';
             PlaybackCommands.OpenApp = 'openApp';
+            PlaybackCommands.SendChannelMessage = 'sendChannelMessage';
+            PlaybackCommands.JoinChannel = 'joinChannel';
             return PlaybackCommands;
         }());
         var Param = /** @class */ (function () {
@@ -276,6 +278,12 @@ var Mvision;
             };
             Loader.prototype.addPlaylistUpdateListener = function (callbackFunction) {
                 this.executeCommand(PlaybackCommands.RegisterNotifications, JSON.stringify({ notificationType: "PLAYBACK_STREAM_UPDATED", callbackMethod: callbackFunction.name }));
+            };
+            Loader.prototype.sendChannelMessage = function (clientId, channelName, payload) {
+                this.executeCommand(PlaybackCommands.SendChannelMessage, JSON.stringify({ clientId: clientId, channelName: channelName, payload: payload }));
+            };
+            Loader.prototype.joinChannel = function (clientId, channelName, callbackFunction) {
+                this.executeCommand(PlaybackCommands.JoinChannel, JSON.stringify({ clientId: clientId, channelName: channelName, callbackMethod: callbackFunction.name }));
             };
             Loader.prototype.executeCommand = function (commandName, commandParamsJson) {
                 try {
