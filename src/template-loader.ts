@@ -218,7 +218,7 @@ module Mvision.Templates {
                     window.Player.openMediaInZone(this.playId, mediaId, zoneId);
                 } else {
                     this.executeCommand(PlaybackCommands.OpenMediaInZone,
-                            JSON.stringify({mediaId:mediaId, zoneId:zoneId, loop:loop, startMode: startMode}));
+                            {mediaId:mediaId, zoneId:zoneId, loop:loop, startMode: startMode});
                 }
             } catch (err) {
                 // method not implemented
@@ -226,84 +226,84 @@ module Mvision.Templates {
         }
 
         public stopPlaybackInZone(zoneId: number): void {
-            this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({type:"STOP", zoneId:zoneId}));
+            this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"STOP", zoneId:zoneId});
         }
 
         public resumeLoopPlaybackInZone(zoneId: number): void {
-            this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({type:"RESUME_LOOP_PLAYBACK", zoneId:zoneId}));
+            this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"RESUME_LOOP_PLAYBACK", zoneId:zoneId});
         }
 
         public clearPendingEventsInZone(zoneId: number): void {
-            this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({type:"CLEAR_PENDING_EVENTS", zoneId:zoneId}));
+            this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneId:zoneId});
         }
 
         public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean, behind: boolean = false): void {
-            this.executeCommand(PlaybackCommands.CreateCustomZone, JSON.stringify({zoneName:zoneName, behind:behind, persistent:persistent, coordinates:{left:left, top:top, width:width, height:height}}));
+            this.executeCommand(PlaybackCommands.CreateCustomZone, {zoneName:zoneName, behind:behind, persistent:persistent, coordinates:{left:left, top:top, width:width, height:height}});
         }
 
         public deleteCustomZone(zoneName: string): void {
-            this.executeCommand(PlaybackCommands.DeleteCustomZone, JSON.stringify({zoneName:zoneName}));
+            this.executeCommand(PlaybackCommands.DeleteCustomZone, {zoneName:zoneName});
         }
 
         public openMediaInCustomZone(mediaId: string, zoneName: string, loop: boolean = false, startMode: string = null): void {
             this.executeCommand(PlaybackCommands.OpenMediaInZone,
-                    JSON.stringify({mediaId:mediaId, zoneName:zoneName, loop:loop, startMode: startMode}));
+                    {mediaId:mediaId, zoneName:zoneName, loop:loop, startMode: startMode});
         }
 
         public stopPlaybackInCustomZone(zoneName: string): void {
-            this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({type:"STOP", zoneName:zoneName}));
+            this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"STOP", zoneName:zoneName});
         }
 
         public resumeLoopPlaybackInCustomZone(zoneName: string): void {
-            this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({type:"RESUME_LOOP_PLAYBACK", zoneName:zoneName}));
+            this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"RESUME_LOOP_PLAYBACK", zoneName:zoneName});
         }
 
         public clearPendingEventsInCustomZone(zoneName: string): void {
-            this.executeCommand(PlaybackCommands.PlaybackActionInZone, JSON.stringify({type:"CLEAR_PENDING_EVENTS", zoneName:zoneName}));
+            this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneName:zoneName});
         }
 
         public closePlaybackApp(): void {
-            this.executeCommand(PlaybackCommands.ClosePlaybackApp, "{}");
+            this.executeCommand(PlaybackCommands.ClosePlaybackApp, {});
         }
 
         public openHomeApp(): void {
-            this.executeCommand(PlaybackCommands.OpenHomeApp, "{}");
+            this.executeCommand(PlaybackCommands.OpenHomeApp, {});
         }
 
         public openVodApp(): void {
-            this.executeCommand(PlaybackCommands.OpenVodApp, "{}");
+            this.executeCommand(PlaybackCommands.OpenVodApp, {});
         }
 
         public openDiagnosticsApp(): void {
-            this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, "{}");
+            this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, {});
         }
 
         public openSettingsApp(): void {
-            this.executeCommand(PlaybackCommands.OpenSettingsApp, "{}");
+            this.executeCommand(PlaybackCommands.OpenSettingsApp, {});
         }
 
         public openApp(appId:String): void {
-            this.executeCommand(PlaybackCommands.OpenApp, JSON.stringify({appId:appId}));
+            this.executeCommand(PlaybackCommands.OpenApp, {appId:appId});
         }
 
         public getMusicStreamTracks(callbackFunction): void {
             this.executeCommand(PlaybackCommands.PlaylistDataRequest,
-                JSON.stringify({dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name}));
+                {dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name});
         }
 
         public getPlaylistContainerItems(playlistId: number, callbackFunction): void {
             this.executeCommand(PlaybackCommands.PlaylistDataRequest,
-                JSON.stringify({dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name}));
+                {dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name});
         }
 
         public voteMusicTrack(id: number): void {
             this.executeCommand(PlaybackCommands.VotingPlaylistRequest,
-                JSON.stringify({action: "VOTE", referenceItem: id}));
+                {action: "VOTE", referenceItem: id});
         }
 
         public getVotedTracks(callbackFunction): void {
             this.executeCommand(PlaybackCommands.VotingPlaylistRequest,
-                JSON.stringify({action: "GET_VOTED_ITEMS", responseCallbackMethod: callbackFunction.name}));
+                {action: "GET_VOTED_ITEMS", responseCallbackMethod: callbackFunction.name});
         }
 
         public addPlaybackListener(callbackFunction): void {
@@ -316,17 +316,17 @@ module Mvision.Templates {
 
         public addPlaylistUpdateListener(callbackFunction): void {
             this.executeCommand(PlaybackCommands.RegisterNotifications,
-                    JSON.stringify({notificationType:"PLAYBACK_STREAM_UPDATED", callbackMethod:callbackFunction.name}));
+                    {notificationType:"PLAYBACK_STREAM_UPDATED", callbackMethod:callbackFunction.name});
         }
         
         public sendChannelMessage(clientId: string, channelName: string, payload: string): void {
             this.executeCommand(PlaybackCommands.SendChannelMessage,
-                JSON.stringify({clientId:clientId, channelName:channelName, payload:payload}));
+                {clientId:clientId, channelName:channelName, payload:payload});
         }
 
         public joinChannel(clientId: string, channelName: string, callbackFunction): void {
             this.executeCommand(PlaybackCommands.JoinChannel,
-                JSON.stringify({clientId:clientId, channelName:channelName, callbackMethod:callbackFunction.name}));
+                {clientId:clientId, channelName:channelName, callbackMethod:callbackFunction.name});
         }
 
         public sendSerialMessageToConnectedDevice(baudRate: number, dataType: string, data: string): Promise<string> {
@@ -347,9 +347,9 @@ module Mvision.Templates {
             );
         }
 
-        public executeCommand(commandName: string, commandParamsJson: string): void {
+        public executeCommand(commandName: string, commandParams: Object): void {
             try {
-                window.Player.executeCommand(this.playId, commandName, commandParamsJson);
+                window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
             } catch (err) {
                 console.log("Error while calling Player method: " + err);
             }
