@@ -31,6 +31,7 @@ module Mvision.Templates {
         public static OpenApp = 'openApp';
         public static SendChannelMessage = 'sendChannelMessage';
         public static JoinChannel = 'joinChannel';
+        public static SendSerialMessage = 'sendSerialMessage';
     }
 
     export class Param {
@@ -110,10 +111,14 @@ module Mvision.Templates {
         private started: boolean;
         private componentsPromise: Promise<Component[]>;
         private componentsPromiseResolve: (data: Component[]) => void;
-        private startPromise: Promise;
+        private startPromise: Promise<void>;
         private startPromiseResolve: () => void;
 
+        private globalCallbackMethodNameCounter: number;
+
         constructor() {
+            this.globalCallbackMethodNameCounter = 0;
+
             if (!window.Player) {
                 window.Player = new PreviewPlayer();
                 window.addEventListener('message', (event) => {
@@ -134,7 +139,7 @@ module Mvision.Templates {
                 .toLowerCase()
                 !== 'false';
 
-            this.startPromise = new Promise<Component[]>((resolve, reject) => {
+            this.startPromise = new Promise<void>((resolve, reject) => {
                 this.startPromiseResolve = resolve;
             });
             if (this.started) {
@@ -145,6 +150,11 @@ module Mvision.Templates {
                 this.componentsPromiseResolve = resolve;
             });
             this.getDataJson();
+        }
+
+        private getNextGlobalCallbackMethodName(): string {
+            this.globalCallbackMethodNameCounter = this.globalCallbackMethodNameCounter + 1;
+            return "mvisionGlobalCallbackMethodName" + this.globalCallbackMethodNameCounter;
         }
 
         public setComponents(components:any): void {
@@ -158,7 +168,7 @@ module Mvision.Templates {
             return this.componentsPromise;
         }
 
-        public isStarted(): Promise {
+        public isStarted(): Promise<void> {
             return this.startPromise;
         }
 
@@ -319,12 +329,62 @@ module Mvision.Templates {
                 JSON.stringify({clientId:clientId, channelName:channelName, callbackMethod:callbackFunction.name}));
         }
 
+        public sendSerialMessageToConnectedDevice(baudRate: number, dataType: string, data: string): Promise<string> {
+            return this.sendSerialMessageToTargetDevice(null, baudRate, dataType, data);
+        }
+
+        public sendSerialMessageToTargetDevice(targetProductId: string, baudRate: number, dataType: string, data: string): Promise<string> {
+            return this.executeCommandReturnPromise(
+                PlaybackCommands.SendSerialMessage,
+                {
+                    serialMessageRequest: {
+                        targetProductId:targetProductId,
+                        baudRate:baudRate, 
+                        dataType:dataType, 
+                        data:data
+                    }
+                }
+            );
+        }
+
         public executeCommand(commandName: string, commandParamsJson: string): void {
             try {
                 window.Player.executeCommand(this.playId, commandName, commandParamsJson);
             } catch (err) {
                 console.log("Error while calling Player method: " + err);
             }
+        }
+
+        public executeCommandReturnPromise(commandName: string, commandParams: Object): Promise<string> {
+            const successMethodName = this.getNextGlobalCallbackMethodName();
+            const errorMethodName = this.getNextGlobalCallbackMethodName();
+            const finalPlayId = this.playId;
+            return new Promise<string>(function(resolve, reject) {
+                const clearData = function() {
+                    delete window[successMethodName];
+                    delete window[errorMethodName];
+                }
+
+                window[successMethodName] = function(response) {
+                    clearData();
+                    resolve(response);
+                };
+                
+                window[errorMethodName] = function(errorMessage) {
+                    clearData();
+                    reject(new Error(errorMessage));
+                };
+
+                commandParams["responseCallbackMethod"] = successMethodName;
+                commandParams["errorCallbackMethod"] = errorMethodName;
+
+                try {
+                    window.Player.executeCommand(finalPlayId, commandName, JSON.stringify(commandParams));
+                } catch (err) {
+                    clearData();
+                    reject(err);
+                }
+            });
         }
 
         public play() {

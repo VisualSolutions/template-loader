@@ -38,6 +38,7 @@ var Mvision;
             PlaybackCommands.OpenApp = 'openApp';
             PlaybackCommands.SendChannelMessage = 'sendChannelMessage';
             PlaybackCommands.JoinChannel = 'joinChannel';
+            PlaybackCommands.SendSerialMessage = 'sendSerialMessage';
             return PlaybackCommands;
         }());
         var Param = /** @class */ (function () {
@@ -116,6 +117,7 @@ var Mvision;
         var Loader = /** @class */ (function () {
             function Loader() {
                 var _this = this;
+                this.globalCallbackMethodNameCounter = 0;
                 if (!window.Player) {
                     window.Player = new PreviewPlayer();
                     window.addEventListener('message', function (event) {
@@ -146,6 +148,10 @@ var Mvision;
                 });
                 this.getDataJson();
             }
+            Loader.prototype.getNextGlobalCallbackMethodName = function () {
+                this.globalCallbackMethodNameCounter = this.globalCallbackMethodNameCounter + 1;
+                return "mvisionGlobalCallbackMethodName" + this.globalCallbackMethodNameCounter;
+            };
             Loader.prototype.setComponents = function (components) {
                 var _this = this;
                 this.componentsPromise = new Promise(function (resolve, reject) {
@@ -285,6 +291,19 @@ var Mvision;
             Loader.prototype.joinChannel = function (clientId, channelName, callbackFunction) {
                 this.executeCommand(PlaybackCommands.JoinChannel, JSON.stringify({ clientId: clientId, channelName: channelName, callbackMethod: callbackFunction.name }));
             };
+            Loader.prototype.sendSerialMessageToConnectedDevice = function (baudRate, dataType, data) {
+                return this.sendSerialMessageToTargetDevice(null, baudRate, dataType, data);
+            };
+            Loader.prototype.sendSerialMessageToTargetDevice = function (targetProductId, baudRate, dataType, data) {
+                return this.executeCommandReturnPromise(PlaybackCommands.SendSerialMessage, {
+                    serialMessageRequest: {
+                        targetProductId: targetProductId,
+                        baudRate: baudRate,
+                        dataType: dataType,
+                        data: data
+                    }
+                });
+            };
             Loader.prototype.executeCommand = function (commandName, commandParamsJson) {
                 try {
                     window.Player.executeCommand(this.playId, commandName, commandParamsJson);
@@ -292,6 +311,34 @@ var Mvision;
                 catch (err) {
                     console.log("Error while calling Player method: " + err);
                 }
+            };
+            Loader.prototype.executeCommandReturnPromise = function (commandName, commandParams) {
+                var successMethodName = this.getNextGlobalCallbackMethodName();
+                var errorMethodName = this.getNextGlobalCallbackMethodName();
+                var finalPlayId = this.playId;
+                return new Promise(function (resolve, reject) {
+                    var clearData = function () {
+                        delete window[successMethodName];
+                        delete window[errorMethodName];
+                    };
+                    window[successMethodName] = function (response) {
+                        clearData();
+                        resolve(response);
+                    };
+                    window[errorMethodName] = function (errorMessage) {
+                        clearData();
+                        reject(new Error(errorMessage));
+                    };
+                    commandParams["responseCallbackMethod"] = successMethodName;
+                    commandParams["errorCallbackMethod"] = errorMethodName;
+                    try {
+                        window.Player.executeCommand(finalPlayId, commandName, JSON.stringify(commandParams));
+                    }
+                    catch (err) {
+                        clearData();
+                        reject(err);
+                    }
+                });
             };
             Loader.prototype.play = function () {
                 if (!this.started) {
