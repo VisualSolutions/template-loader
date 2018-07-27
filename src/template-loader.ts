@@ -32,6 +32,8 @@ module Mvision.Templates {
         public static SendChannelMessage = 'sendChannelMessage';
         public static JoinChannel = 'joinChannel';
         public static SendSerialMessage = 'sendSerialMessage';
+        public static GetNewAnalyticsSessionId = 'getNewAnalyticsSessionId';
+        public static CreateAnalyticsLog = 'createAnalyticsLog';
     }
 
     export class Param {
@@ -346,10 +348,22 @@ module Mvision.Templates {
                 }
             );
         }
+        
+        public getNewAnalyticsSessionId(): string {
+            return this.executeCommand(PlaybackCommands.GetNewAnalyticsSessionId, null);
+        }
 
-        public executeCommand(commandName: string, commandParams: Object): void {
+        public createAnalyticsEvent(userTriggered: boolean, sessionId: string, customParameters: Object): void {
+            this.executeCommand(PlaybackCommands.CreateAnalyticsLog, {
+                userTriggered: userTriggered,
+                sessionId: sessionId,
+                customParameters: customParameters
+            });
+        }
+
+        public executeCommand(commandName: string, commandParams: Object): any {
             try {
-                window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
+                return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
             } catch (err) {
                 console.log("Error while calling Player method: " + err);
             }

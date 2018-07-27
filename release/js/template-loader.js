@@ -39,6 +39,8 @@ var Mvision;
             PlaybackCommands.SendChannelMessage = 'sendChannelMessage';
             PlaybackCommands.JoinChannel = 'joinChannel';
             PlaybackCommands.SendSerialMessage = 'sendSerialMessage';
+            PlaybackCommands.GetNewAnalyticsSessionId = 'getNewAnalyticsSessionId';
+            PlaybackCommands.CreateAnalyticsLog = 'createAnalyticsLog';
             return PlaybackCommands;
         }());
         var Param = /** @class */ (function () {
@@ -304,9 +306,19 @@ var Mvision;
                     }
                 });
             };
+            Loader.prototype.getNewAnalyticsSessionId = function () {
+                return this.executeCommand(PlaybackCommands.GetNewAnalyticsSessionId, null);
+            };
+            Loader.prototype.createAnalyticsEvent = function (userTriggered, sessionId, customParameters) {
+                this.executeCommand(PlaybackCommands.CreateAnalyticsLog, {
+                    userTriggered: userTriggered,
+                    sessionId: sessionId,
+                    customParameters: customParameters
+                });
+            };
             Loader.prototype.executeCommand = function (commandName, commandParams) {
                 try {
-                    window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
+                    return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
                 }
                 catch (err) {
                     console.log("Error while calling Player method: " + err);
