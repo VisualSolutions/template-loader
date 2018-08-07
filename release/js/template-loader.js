@@ -258,8 +258,9 @@ var Mvision;
             Loader.prototype.openDiagnosticsApp = function () {
                 this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, {});
             };
-            Loader.prototype.openSettingsApp = function () {
-                this.executeCommand(PlaybackCommands.OpenSettingsApp, {});
+            Loader.prototype.openSettingsApp = function (params) {
+                if (params === void 0) { params = {}; }
+                this.executeCommand(PlaybackCommands.OpenSettingsApp, params);
             };
             Loader.prototype.openApp = function (appId) {
                 this.executeCommand(PlaybackCommands.OpenApp, { appId: appId });

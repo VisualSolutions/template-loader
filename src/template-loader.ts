@@ -280,8 +280,8 @@ module Mvision.Templates {
             this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, {});
         }
 
-        public openSettingsApp(): void {
-            this.executeCommand(PlaybackCommands.OpenSettingsApp, {});
+        public openSettingsApp(params: Object = {}): void {
+            this.executeCommand(PlaybackCommands.OpenSettingsApp, params);
         }
 
         public openApp(appId:String): void {
