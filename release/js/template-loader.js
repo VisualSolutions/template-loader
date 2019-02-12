@@ -41,6 +41,7 @@ var Mvision;
             PlaybackCommands.SendSerialMessage = 'sendSerialMessage';
             PlaybackCommands.GetNewAnalyticsSessionId = 'getNewAnalyticsSessionId';
             PlaybackCommands.CreateAnalyticsLog = 'createAnalyticsLog';
+            PlaybackCommands.IsMediaFileAvailable = 'isMediaFileAvailable';
             return PlaybackCommands;
         }());
         var Param = /** @class */ (function () {
@@ -317,12 +318,17 @@ var Mvision;
                     customParameters: customParameters
                 });
             };
+            Loader.prototype.isMediaFileAvailable = function (mediaId) {
+                var resultString = this.executeCommand(PlaybackCommands.IsMediaFileAvailable, mediaId);
+                return resultString == "true";
+            };
             Loader.prototype.executeCommand = function (commandName, commandParams) {
                 try {
                     return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
                 }
                 catch (err) {
                     console.log("Error while calling Player method: " + err);
+                    return null;
                 }
             };
             Loader.prototype.executeCommandReturnPromise = function (commandName, commandParams) {

@@ -34,6 +34,7 @@ module Mvision.Templates {
         public static SendSerialMessage = 'sendSerialMessage';
         public static GetNewAnalyticsSessionId = 'getNewAnalyticsSessionId';
         public static CreateAnalyticsLog = 'createAnalyticsLog';
+        public static IsMediaFileAvailable = 'isMediaFileAvailable';
     }
 
     export class Param {
@@ -361,11 +362,17 @@ module Mvision.Templates {
             });
         }
 
+        public isMediaFileAvailable(mediaId: number): boolean {
+            let resultString = this.executeCommand(PlaybackCommands.IsMediaFileAvailable, mediaId);
+            return resultString == "true";
+        }
+
         public executeCommand(commandName: string, commandParams: Object): any {
             try {
                 return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
             } catch (err) {
                 console.log("Error while calling Player method: " + err);
+                return null;
             }
         }
 
