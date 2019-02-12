@@ -17,7 +17,7 @@
     },
     "homepage": "https://github.com/VisualSolutions/template-loader#readme",
     "devDependencies": {
-        "gulp": "^3.9.1",
+        "gulp": "^4.0.0",
         "gulp-typescript": "^3.2.3",
         "merge2": "^1.2.0",
         "typescript": "^2.6.1"

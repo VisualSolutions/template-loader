@@ -6,7 +6,7 @@ var tsProject = ts.createProject('./src/tsconfig.json');
 
 gulp.task('scripts', function() {
     var tsResult = gulp.src('src/*.ts')
-        .pipe(ts(tsProject));
+        .pipe(tsProject());
 
     return merge([ // Merge the two output streams, so this task is finished when the IO of both operations are done.
         tsResult.dts.pipe(gulp.dest('./release/definitions')),
@@ -14,8 +14,8 @@ gulp.task('scripts', function() {
     ]);
 });
 
-gulp.task('watch', ['scripts'], function() {
+gulp.task('watch', gulp.series('scripts', function() {
     gulp.watch('./src/**.ts', ['scripts']);
-});
+}));
 
-gulp.task('default', ['watch']);
+gulp.task('default', gulp.series('watch'));
