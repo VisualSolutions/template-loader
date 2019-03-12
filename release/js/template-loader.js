@@ -39,6 +39,7 @@ var Mvision;
             PlaybackCommands.SendChannelMessage = 'sendChannelMessage';
             PlaybackCommands.JoinChannel = 'joinChannel';
             PlaybackCommands.SendSerialMessage = 'sendSerialMessage';
+            PlaybackCommands.ReceiveSerialMessages = 'receiveSerialMessages';
             PlaybackCommands.GetNewAnalyticsSessionId = 'getNewAnalyticsSessionId';
             PlaybackCommands.CreateAnalyticsLog = 'createAnalyticsLog';
             PlaybackCommands.IsMediaFileAvailable = 'isMediaFileAvailable';
@@ -295,17 +296,35 @@ var Mvision;
             Loader.prototype.joinChannel = function (clientId, channelName, callbackFunction) {
                 this.executeCommand(PlaybackCommands.JoinChannel, { clientId: clientId, channelName: channelName, callbackMethod: callbackFunction.name });
             };
-            Loader.prototype.sendSerialMessageToConnectedDevice = function (baudRate, dataType, data) {
-                return this.sendSerialMessageToTargetDevice(null, baudRate, dataType, data);
+            Loader.prototype.sendSerialMessageToConnectedDevice = function (baudRate, dataType, data, ignoreResponse) {
+                if (ignoreResponse === void 0) { ignoreResponse = false; }
+                return this.sendSerialMessageToTargetDevice(null, baudRate, dataType, data, ignoreResponse);
             };
-            Loader.prototype.sendSerialMessageToTargetDevice = function (targetProductId, baudRate, dataType, data) {
+            Loader.prototype.sendSerialMessageToTargetDevice = function (targetProductId, baudRate, dataType, data, ignoreResponse) {
+                if (ignoreResponse === void 0) { ignoreResponse = false; }
                 return this.executeCommandReturnPromise(PlaybackCommands.SendSerialMessage, {
                     serialMessageRequest: {
                         targetProductId: targetProductId,
                         baudRate: baudRate,
                         dataType: dataType,
-                        data: data
+                        data: data,
+                        ignoreResponse: ignoreResponse
                     }
+                });
+            };
+            Loader.prototype.receiveSerialMessagesFromConnectedDevice = function (baudRate, dataType, retryOnError, callbackFunction, errorCallbackFunction) {
+                this.receiveSerialMessagesFromTargetDevice(null, baudRate, dataType, retryOnError, callbackFunction, errorCallbackFunction);
+            };
+            Loader.prototype.receiveSerialMessagesFromTargetDevice = function (targetProductId, baudRate, dataType, retryOnError, callbackFunction, errorCallbackFunction) {
+                this.executeCommand(PlaybackCommands.ReceiveSerialMessages, {
+                    serialMessageRequest: {
+                        targetProductId: targetProductId,
+                        baudRate: baudRate,
+                        dataType: dataType,
+                        retryOnError: retryOnError
+                    },
+                    callbackMethod: callbackFunction.name,
+                    errorCallbackMethod: errorCallbackFunction.name
                 });
             };
             Loader.prototype.getNewAnalyticsSessionId = function () {

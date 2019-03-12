@@ -32,6 +32,7 @@ module Mvision.Templates {
         public static SendChannelMessage = 'sendChannelMessage';
         public static JoinChannel = 'joinChannel';
         public static SendSerialMessage = 'sendSerialMessage';
+        public static ReceiveSerialMessages = 'receiveSerialMessages';
         public static GetNewAnalyticsSessionId = 'getNewAnalyticsSessionId';
         public static CreateAnalyticsLog = 'createAnalyticsLog';
         public static IsMediaFileAvailable = 'isMediaFileAvailable';
@@ -332,11 +333,11 @@ module Mvision.Templates {
                 {clientId:clientId, channelName:channelName, callbackMethod:callbackFunction.name});
         }
 
-        public sendSerialMessageToConnectedDevice(baudRate: number, dataType: string, data: string): Promise<string> {
-            return this.sendSerialMessageToTargetDevice(null, baudRate, dataType, data);
+        public sendSerialMessageToConnectedDevice(baudRate: number, dataType: string, data: string, ignoreResponse: boolean = false): Promise<string> {
+            return this.sendSerialMessageToTargetDevice(null, baudRate, dataType, data, ignoreResponse);
         }
 
-        public sendSerialMessageToTargetDevice(targetProductId: string, baudRate: number, dataType: string, data: string): Promise<string> {
+        public sendSerialMessageToTargetDevice(targetProductId: string, baudRate: number, dataType: string, data: string, ignoreResponse: boolean = false): Promise<string> {
             return this.executeCommandReturnPromise(
                 PlaybackCommands.SendSerialMessage,
                 {
@@ -344,8 +345,29 @@ module Mvision.Templates {
                         targetProductId:targetProductId,
                         baudRate:baudRate, 
                         dataType:dataType, 
-                        data:data
+                        data:data,
+						ignoreResponse:ignoreResponse
                     }
+                }
+            );
+        }
+
+        public receiveSerialMessagesFromConnectedDevice(baudRate: number, dataType: string, retryOnError: boolean, callbackFunction, errorCallbackFunction): void {
+            this.receiveSerialMessagesFromTargetDevice(null, baudRate, dataType, retryOnError, callbackFunction, errorCallbackFunction);
+        }
+
+        public receiveSerialMessagesFromTargetDevice(targetProductId: string, baudRate: number, dataType: string, retryOnError: boolean, callbackFunction, errorCallbackFunction): void {
+            this.executeCommand(
+                PlaybackCommands.ReceiveSerialMessages,
+                {
+                    serialMessageRequest: {
+                        targetProductId:targetProductId,
+                        baudRate:baudRate, 
+                        dataType:dataType,
+                        retryOnError:retryOnError
+                    },
+                    callbackMethod:callbackFunction.name,
+                    errorCallbackMethod:errorCallbackFunction.name
                 }
             );
         }
