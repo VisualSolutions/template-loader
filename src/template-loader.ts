@@ -363,9 +363,9 @@ module Mvision.Templates {
                     serialMessageRequest: {
                         targetProductId:targetProductId,
                         baudRate:baudRate, 
-                        dataType:dataType,
-                        retryOnError:retryOnError
+                        dataType:dataType
                     },
+                    retryOnError:retryOnError,
                     callbackMethod:callbackFunction.name,
                     errorCallbackMethod:errorCallbackFunction.name
                 }
