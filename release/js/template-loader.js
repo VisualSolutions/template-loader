@@ -227,9 +227,16 @@ var Mvision;
             Loader.prototype.clearPendingEventsInZone = function (zoneId) {
                 this.executeCommand(PlaybackCommands.PlaybackActionInZone, { type: "CLEAR_PENDING_EVENTS", zoneId: zoneId });
             };
-            Loader.prototype.createCustomZone = function (zoneName, left, top, width, height, persistent, behind) {
+            Loader.prototype.createCustomZone = function (zoneName, left, top, width, height, persistent, behind, loopingMediaId) {
                 if (behind === void 0) { behind = false; }
-                this.executeCommand(PlaybackCommands.CreateCustomZone, { zoneName: zoneName, behind: behind, persistent: persistent, coordinates: { left: left, top: top, width: width, height: height } });
+                if (loopingMediaId === void 0) { loopingMediaId = null; }
+                this.executeCommand(PlaybackCommands.CreateCustomZone, {
+                    zoneName: zoneName,
+                    coordinates: { left: left, top: top, width: width, height: height },
+                    behind: behind,
+                    persistent: persistent,
+                    loopingPlaylistItemId: loopingMediaId
+                });
             };
             Loader.prototype.deleteCustomZone = function (zoneName) {
                 this.executeCommand(PlaybackCommands.DeleteCustomZone, { zoneName: zoneName });

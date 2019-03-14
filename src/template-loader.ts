@@ -241,8 +241,14 @@ module Mvision.Templates {
             this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneId:zoneId});
         }
 
-        public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean, behind: boolean = false): void {
-            this.executeCommand(PlaybackCommands.CreateCustomZone, {zoneName:zoneName, behind:behind, persistent:persistent, coordinates:{left:left, top:top, width:width, height:height}});
+        public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean, behind: boolean = false, loopingMediaId: string = null): void {
+            this.executeCommand(PlaybackCommands.CreateCustomZone, {
+                zoneName:zoneName, 
+                coordinates:{left:left, top:top, width:width, height:height},
+                behind:behind, 
+                persistent:persistent,
+                loopingPlaylistItemId:loopingMediaId
+            });
         }
 
         public deleteCustomZone(zoneName: string): void {
