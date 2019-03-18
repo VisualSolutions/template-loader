@@ -348,6 +348,23 @@ var Mvision;
                 var resultString = this.executeCommand(PlaybackCommands.IsMediaFileAvailable, mediaId);
                 return resultString == "true";
             };
+            Loader.prototype.sendDatagramMessage = function (targetAddress, port, dataType, message) {
+                return this.executeCommandReturnPromise("DATAGRAM_SEND", {
+                    targetAddress: targetAddress,
+                    port: port,
+                    dataType: dataType,
+                    message: message
+                });
+            };
+            Loader.prototype.receiveDatagramMessages = function (multicastAddress, port, dataType, callbackFunction, errorCallbackFunction) {
+                this.executeCommand("DATAGRAM_RECEIVE", {
+                    multicastAddress: multicastAddress,
+                    port: port,
+                    dataType: dataType,
+                    callbackMethod: callbackFunction.name,
+                    errorCallbackMethod: errorCallbackFunction.name
+                });
+            };
             Loader.prototype.executeCommand = function (commandName, commandParams) {
                 try {
                     return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
@@ -374,6 +391,9 @@ var Mvision;
                         clearData();
                         reject(new Error(errorMessage));
                     };
+                    /**
+                     * "responseCallbackMethod" is deprecated on the player side replace with "callbackMethod" in a future version when most players would have upgraded
+                     */
                     commandParams["responseCallbackMethod"] = successMethodName;
                     commandParams["errorCallbackMethod"] = errorMethodName;
                     try {

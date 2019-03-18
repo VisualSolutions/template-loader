@@ -395,6 +395,31 @@ module Mvision.Templates {
             return resultString == "true";
         }
 
+        public sendDatagramMessage(targetAddress: string, port: number, dataType: string, message: string): Promise<string> {
+            return this.executeCommandReturnPromise(
+                "DATAGRAM_SEND",
+                {
+                    targetAddress:targetAddress,
+                    port:port, 
+                    dataType:dataType,
+                    message:message
+                }
+            );
+        }
+
+        public receiveDatagramMessages(multicastAddress: string, port: number, dataType: string, callbackFunction, errorCallbackFunction): void {
+            this.executeCommand(
+                "DATAGRAM_RECEIVE",
+                {
+                    multicastAddress:multicastAddress,
+                    port:port, 
+                    dataType:dataType,
+                    callbackMethod:callbackFunction.name,
+                    errorCallbackMethod:errorCallbackFunction.name
+                }
+            );
+        }
+
         public executeCommand(commandName: string, commandParams: Object): any {
             try {
                 return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
@@ -424,6 +449,9 @@ module Mvision.Templates {
                     reject(new Error(errorMessage));
                 };
 
+                /**
+                 * "responseCallbackMethod" is deprecated on the player side replace with "callbackMethod" in a future version when most players would have upgraded
+                 */
                 commandParams["responseCallbackMethod"] = successMethodName;
                 commandParams["errorCallbackMethod"] = errorMethodName;
 
