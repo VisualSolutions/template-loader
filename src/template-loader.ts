@@ -241,6 +241,10 @@ module Mvision.Templates {
             this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneId:zoneId});
         }
 
+        public playNextInZone(zoneId: number): void {
+            this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"PLAY_NEXT", zoneId:zoneId});
+        }
+
         public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean, behind: boolean = false, loopingMediaId: string = null): void {
             this.executeCommand(PlaybackCommands.CreateCustomZone, {
                 zoneName:zoneName, 
@@ -270,6 +274,10 @@ module Mvision.Templates {
 
         public clearPendingEventsInCustomZone(zoneName: string): void {
             this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneName:zoneName});
+        }
+
+        public playNextInCustomZone(zoneName: string): void {
+            this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"PLAY_NEXT", zoneName:zoneName});
         }
 
         public closePlaybackApp(): void {

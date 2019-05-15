@@ -227,6 +227,9 @@ var Mvision;
             Loader.prototype.clearPendingEventsInZone = function (zoneId) {
                 this.executeCommand(PlaybackCommands.PlaybackActionInZone, { type: "CLEAR_PENDING_EVENTS", zoneId: zoneId });
             };
+            Loader.prototype.playNextInZone = function (zoneId) {
+                this.executeCommand(PlaybackCommands.PlaybackActionInZone, { type: "PLAY_NEXT", zoneId: zoneId });
+            };
             Loader.prototype.createCustomZone = function (zoneName, left, top, width, height, persistent, behind, loopingMediaId) {
                 if (behind === void 0) { behind = false; }
                 if (loopingMediaId === void 0) { loopingMediaId = null; }
@@ -254,6 +257,9 @@ var Mvision;
             };
             Loader.prototype.clearPendingEventsInCustomZone = function (zoneName) {
                 this.executeCommand(PlaybackCommands.PlaybackActionInZone, { type: "CLEAR_PENDING_EVENTS", zoneName: zoneName });
+            };
+            Loader.prototype.playNextInCustomZone = function (zoneName) {
+                this.executeCommand(PlaybackCommands.PlaybackActionInZone, { type: "PLAY_NEXT", zoneName: zoneName });
             };
             Loader.prototype.closePlaybackApp = function () {
                 this.executeCommand(PlaybackCommands.ClosePlaybackApp, {});
