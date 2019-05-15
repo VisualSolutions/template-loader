@@ -297,6 +297,9 @@ var Mvision;
             Loader.prototype.addPlaylistUpdateListener = function (callbackFunction) {
                 this.executeCommand(PlaybackCommands.RegisterNotifications, { notificationType: "PLAYBACK_STREAM_UPDATED", callbackMethod: callbackFunction.name });
             };
+            Loader.prototype.addActiveMusicPlaylistChangeListener = function (callbackFunction) {
+                this.executeCommand(PlaybackCommands.RegisterNotifications, { notificationType: "ACTIVE_MUSIC_PLAYLIST_CHANGED", callbackMethod: callbackFunction.name });
+            };
             Loader.prototype.sendChannelMessage = function (clientId, channelName, payload) {
                 this.executeCommand(PlaybackCommands.SendChannelMessage, { clientId: clientId, channelName: channelName, payload: payload });
             };

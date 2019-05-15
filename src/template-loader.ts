@@ -328,6 +328,11 @@ module Mvision.Templates {
             this.executeCommand(PlaybackCommands.RegisterNotifications,
                     {notificationType:"PLAYBACK_STREAM_UPDATED", callbackMethod:callbackFunction.name});
         }
+
+        public addActiveMusicPlaylistChangeListener(callbackFunction): void {
+            this.executeCommand(PlaybackCommands.RegisterNotifications,
+                    {notificationType:"ACTIVE_MUSIC_PLAYLIST_CHANGED", callbackMethod:callbackFunction.name});
+        }
         
         public sendChannelMessage(clientId: string, channelName: string, payload: string): void {
             this.executeCommand(PlaybackCommands.SendChannelMessage,
