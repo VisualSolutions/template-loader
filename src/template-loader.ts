@@ -301,6 +301,16 @@ module Mvision.Templates {
                 {dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name});
         }
 
+        public getActiveMusicPlaylistDataAndTracks(callbackFunction): void {
+            this.executeCommand(PlaybackCommands.PlaylistDataRequest,
+                {dataType: "ACTIVE_MUSIC_PLAYLIST_DATA_AND_TRACKS", responseCallbackMethod: callbackFunction.name});
+        }
+
+        public getActiveMusicPlaylistData(callbackFunction): void {
+            this.executeCommand(PlaybackCommands.PlaylistDataRequest,
+                {dataType: "ACTIVE_MUSIC_PLAYLIST_DATA", responseCallbackMethod: callbackFunction.name});
+        }
+
         public getPlaylistContainerItems(playlistId: number, callbackFunction): void {
             this.executeCommand(PlaybackCommands.PlaylistDataRequest,
                 {dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name});

@@ -277,6 +277,12 @@ var Mvision;
             Loader.prototype.getMusicStreamTracks = function (callbackFunction) {
                 this.executeCommand(PlaybackCommands.PlaylistDataRequest, { dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name });
             };
+            Loader.prototype.getActiveMusicPlaylistDataAndTracks = function (callbackFunction) {
+                this.executeCommand(PlaybackCommands.PlaylistDataRequest, { dataType: "ACTIVE_MUSIC_PLAYLIST_DATA_AND_TRACKS", responseCallbackMethod: callbackFunction.name });
+            };
+            Loader.prototype.getActiveMusicPlaylistData = function (callbackFunction) {
+                this.executeCommand(PlaybackCommands.PlaylistDataRequest, { dataType: "ACTIVE_MUSIC_PLAYLIST_DATA", responseCallbackMethod: callbackFunction.name });
+            };
             Loader.prototype.getPlaylistContainerItems = function (playlistId, callbackFunction) {
                 this.executeCommand(PlaybackCommands.PlaylistDataRequest, { dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name });
             };
