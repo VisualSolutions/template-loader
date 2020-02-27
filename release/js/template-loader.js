@@ -380,6 +380,9 @@ var Mvision;
                     errorCallbackMethod: errorCallbackFunction.name
                 });
             };
+            Loader.prototype.setPlaylistItemsSchedules = function (schedules) {
+                this.executeCommand("SET_PLAYLIST_ITEMS_SCHEDULES", schedules);
+            };
             Loader.prototype.executeCommand = function (commandName, commandParams) {
                 try {
                     return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));

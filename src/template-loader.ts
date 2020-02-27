@@ -443,6 +443,13 @@ module Mvision.Templates {
             );
         }
 
+        public setPlaylistItemsSchedules(schedules: Array<Object>): void {
+            this.executeCommand(
+                "SET_PLAYLIST_ITEMS_SCHEDULES",
+                schedules
+            );
+        }
+
         public executeCommand(commandName: string, commandParams: Object): any {
             try {
                 return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
