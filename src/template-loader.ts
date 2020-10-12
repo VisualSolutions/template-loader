@@ -288,8 +288,14 @@ module Mvision.Templates {
             this.executeCommand(PlaybackCommands.OpenHomeApp, {});
         }
 
-        public openVodApp(): void {
-            this.executeCommand(PlaybackCommands.OpenVodApp, {});
+        public openVodApp(initialFolderIdentifier: string = null, allowUpNavigationFromInitialFolder: boolean = false): void {
+            this.executeCommand(
+                PlaybackCommands.OpenVodApp, 
+                {
+                    initialFolderIdentifier: initialFolderIdentifier,
+                    allowUpNavigationFromInitialFolder: allowUpNavigationFromInitialFolder
+                }
+            );
         }
 
         public openDiagnosticsApp(): void {

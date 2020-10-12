@@ -267,8 +267,13 @@ var Mvision;
             Loader.prototype.openHomeApp = function () {
                 this.executeCommand(PlaybackCommands.OpenHomeApp, {});
             };
-            Loader.prototype.openVodApp = function () {
-                this.executeCommand(PlaybackCommands.OpenVodApp, {});
+            Loader.prototype.openVodApp = function (initialFolderIdentifier, allowUpNavigationFromInitialFolder) {
+                if (initialFolderIdentifier === void 0) { initialFolderIdentifier = null; }
+                if (allowUpNavigationFromInitialFolder === void 0) { allowUpNavigationFromInitialFolder = false; }
+                this.executeCommand(PlaybackCommands.OpenVodApp, {
+                    initialFolderIdentifier: initialFolderIdentifier,
+                    allowUpNavigationFromInitialFolder: allowUpNavigationFromInitialFolder
+                });
             };
             Loader.prototype.openDiagnosticsApp = function () {
                 this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, {});
