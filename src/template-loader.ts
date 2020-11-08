@@ -214,6 +214,15 @@ module Mvision.Templates {
             return null;
         }
 
+        public getPlayerParameters(keys: string[]): Promise<string[]> {
+            return this.executeCommandReturnPromise(
+                "GET_SITE_PARAMETERS",
+                {
+                    keys: keys
+                }
+            );
+        }
+
         public openMediaInZone(mediaId: string, zoneId: number, loop: boolean = false, startMode: string = null): void {
             try {
                 if (!loop && !startMode) {
@@ -411,6 +420,13 @@ module Mvision.Templates {
             return this.executeCommand(PlaybackCommands.GetNewAnalyticsSessionId, null);
         }
 
+        public getNewAnalyticsSessionIdPromise(): Promise<string> {
+            return this.executeCommandReturnPromise(
+                "GET_NEW_ANALYTICS_SESSION_ID_PROMISE",
+                {}
+            );
+        }
+
         public createAnalyticsEvent(userTriggered: boolean, sessionId: string, customParameters: Object): void {
             this.executeCommand(PlaybackCommands.CreateAnalyticsLog, {
                 userTriggered: userTriggered,
@@ -422,6 +438,15 @@ module Mvision.Templates {
         public isMediaFileAvailable(mediaId: number): boolean {
             let resultString = this.executeCommand(PlaybackCommands.IsMediaFileAvailable, mediaId);
             return resultString == "true";
+        }
+
+        public areMediaFilesAvailable(mediaIds: number[]): Promise<boolean[]> {
+            return this.executeCommandReturnPromise(
+                "ARE_MEDIA_FILES_AVAILABLE",
+                {
+                    mediaIds: mediaIds
+                }
+            );
         }
 
         public sendDatagramMessage(targetAddress: string, port: number, dataType: string, message: string): Promise<string> {
@@ -465,11 +490,11 @@ module Mvision.Templates {
             }
         }
 
-        public executeCommandReturnPromise(commandName: string, commandParams: Object): Promise<string> {
+        public executeCommandReturnPromise(commandName: string, commandParams: Object): Promise<any> {
             const successMethodName = this.getNextGlobalCallbackMethodName();
             const errorMethodName = this.getNextGlobalCallbackMethodName();
             const finalPlayId = this.playId;
-            return new Promise<string>(function(resolve, reject) {
+            return new Promise<any>(function(resolve, reject) {
                 const clearData = function() {
                     delete window[successMethodName];
                     delete window[errorMethodName];
@@ -485,10 +510,7 @@ module Mvision.Templates {
                     reject(new Error(errorMessage));
                 };
 
-                /**
-                 * "responseCallbackMethod" is deprecated on the player side replace with "callbackMethod" in a future version when most players would have upgraded
-                 */
-                commandParams["responseCallbackMethod"] = successMethodName;
+                commandParams["callbackMethod"] = successMethodName;
                 commandParams["errorCallbackMethod"] = errorMethodName;
 
                 try {

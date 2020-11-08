@@ -201,6 +201,11 @@ var Mvision;
                 }
                 return null;
             };
+            Loader.prototype.getPlayerParameters = function (keys) {
+                return this.executeCommandReturnPromise("GET_SITE_PARAMETERS", {
+                    keys: keys
+                });
+            };
             Loader.prototype.openMediaInZone = function (mediaId, zoneId, loop, startMode) {
                 if (loop === void 0) { loop = false; }
                 if (startMode === void 0) { startMode = null; }
@@ -357,6 +362,9 @@ var Mvision;
             Loader.prototype.getNewAnalyticsSessionId = function () {
                 return this.executeCommand(PlaybackCommands.GetNewAnalyticsSessionId, null);
             };
+            Loader.prototype.getNewAnalyticsSessionIdPromise = function () {
+                return this.executeCommandReturnPromise("GET_NEW_ANALYTICS_SESSION_ID_PROMISE", {});
+            };
             Loader.prototype.createAnalyticsEvent = function (userTriggered, sessionId, customParameters) {
                 this.executeCommand(PlaybackCommands.CreateAnalyticsLog, {
                     userTriggered: userTriggered,
@@ -367,6 +375,11 @@ var Mvision;
             Loader.prototype.isMediaFileAvailable = function (mediaId) {
                 var resultString = this.executeCommand(PlaybackCommands.IsMediaFileAvailable, mediaId);
                 return resultString == "true";
+            };
+            Loader.prototype.areMediaFilesAvailable = function (mediaIds) {
+                return this.executeCommandReturnPromise("ARE_MEDIA_FILES_AVAILABLE", {
+                    mediaIds: mediaIds
+                });
             };
             Loader.prototype.sendDatagramMessage = function (targetAddress, port, dataType, message) {
                 return this.executeCommandReturnPromise("DATAGRAM_SEND", {
@@ -414,10 +427,7 @@ var Mvision;
                         clearData();
                         reject(new Error(errorMessage));
                     };
-                    /**
-                     * "responseCallbackMethod" is deprecated on the player side replace with "callbackMethod" in a future version when most players would have upgraded
-                     */
-                    commandParams["responseCallbackMethod"] = successMethodName;
+                    commandParams["callbackMethod"] = successMethodName;
                     commandParams["errorCallbackMethod"] = errorMethodName;
                     try {
                         window.Player.executeCommand(finalPlayId, commandName, JSON.stringify(commandParams));
