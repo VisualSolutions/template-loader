@@ -106,7 +106,7 @@ module Mvision.Templates {
         }
     }
 
-    class EmbededPlayer implements PlayerExternal.PlayerApi {
+    class RemotePlayer implements PlayerExternal.PlayerApi {
         
         private sendMessageFunction: Function;
         
@@ -222,7 +222,7 @@ module Mvision.Templates {
 
             if (!window.Player) {
                 if ((typeof this.platformType === 'string') && this.platformType.includes("Cloud")) {
-                    window.Player = new EmbededPlayer(function(message) {
+                    window.Player = new RemotePlayer(function(message) {
                         window.parent.postMessage(
                             {
                                 channel: "MvisionPlayerApi",
