@@ -118,18 +118,69 @@ var Mvision;
             return PreviewPlayer;
         }());
         Templates.PreviewPlayer = PreviewPlayer;
+        var EmbededPlayer = /** @class */ (function () {
+            function EmbededPlayer(sendMessageFunction) {
+                this.sendMessageFunction = sendMessageFunction;
+            }
+            EmbededPlayer.prototype.executeCommandImpl = function (playId, commandName, commandParams) {
+                var convertedCommandParams;
+                if ((typeof commandParams) === "string") {
+                    try {
+                        convertedCommandParams = JSON.parse(commandParams);
+                    }
+                    catch (error) {
+                        convertedCommandParams = commandParams;
+                    }
+                }
+                else {
+                    convertedCommandParams = commandParams;
+                }
+                this.sendMessageFunction({
+                    playId: playId,
+                    type: commandName,
+                    params: convertedCommandParams,
+                });
+            };
+            EmbededPlayer.prototype.getParameter = function (key) {
+                return null;
+            };
+            EmbededPlayer.prototype.mediaFinished = function (playId) {
+                this.executeCommandImpl(playId, "PLAYBACK_STATE", {
+                    type: "MEDIA_FINISHED",
+                });
+            };
+            EmbededPlayer.prototype.mediaError = function (playId, message) {
+                this.executeCommandImpl(playId, "PLAYBACK_STATE", {
+                    type: "MEDIA_ERROR",
+                    message: message,
+                });
+            };
+            EmbededPlayer.prototype.mediaReady = function (playId, started) {
+                this.executeCommandImpl(playId, "PLAYBACK_STATE", {
+                    type: "MEDIA_READY",
+                });
+            };
+            EmbededPlayer.prototype.openMediaInZone = function (playId, mediaId, zoneId) {
+                this.executeCommandImpl(playId, "MEDIA_PLAY", {
+                    mediaId: mediaId,
+                    zoneId: zoneId,
+                });
+            };
+            EmbededPlayer.prototype.executeCommand = function (playId, commandName, commandParams) {
+                this.executeCommandImpl(playId, commandName, commandParams);
+            };
+            EmbededPlayer.prototype.addPlaybackListener = function (playId, callbackMethod) {
+                this.executeCommandImpl(playId, "NOTIFICATIONS_REGISTRATION", {
+                    notificationType: "MEDIA_PLAYBACK",
+                    callbackMethod: callbackMethod,
+                });
+            };
+            return EmbededPlayer;
+        }());
         var Loader = /** @class */ (function () {
             function Loader() {
                 var _this = this;
                 this.globalCallbackMethodNameCounter = 0;
-                if (!window.Player) {
-                    window.Player = new PreviewPlayer();
-                    window.addEventListener('message', function (event) {
-                        if (event && event.data && event.data.action && event.data.action === 'play') {
-                            _this.play();
-                        }
-                    });
-                }
                 this.dataJson = this.getParameterByName(QueryStrings.Data);
                 this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));
                 this.platformType = this.getParameterByName(QueryStrings.PlatformType);
@@ -137,10 +188,25 @@ var Mvision;
                 if (isNaN(this.duration)) {
                     this.duration = PlaybackConstants.DurationAuto;
                 }
-                this.started =
-                    String(this.getParameterByName(QueryStrings.AutoPlay))
-                        .toLowerCase()
-                        !== 'false';
+                this.started = String(this.getParameterByName(QueryStrings.AutoPlay)).toLowerCase() !== 'false';
+                if (!window.Player) {
+                    if ((typeof this.platformType === 'string') && this.platformType.includes("Cloud")) {
+                        window.Player = new EmbededPlayer(function (message) {
+                            window.parent.postMessage({
+                                channel: "MvisionPlayerApi",
+                                payload: message
+                            }, "*");
+                        });
+                    }
+                    else {
+                        window.Player = new PreviewPlayer();
+                        window.addEventListener('message', function (event) {
+                            if (event && event.data && event.data.action && event.data.action === 'play') {
+                                _this.play();
+                            }
+                        });
+                    }
+                }
                 this.startPromise = new Promise(function (resolve, reject) {
                     _this.startPromiseResolve = resolve;
                 });

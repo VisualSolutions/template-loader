@@ -106,6 +106,94 @@ module Mvision.Templates {
         }
     }
 
+    class EmbededPlayer implements PlayerExternal.PlayerApi {
+        
+        private sendMessageFunction: Function;
+        
+        constructor(sendMessageFunction: Function) {
+            this.sendMessageFunction = sendMessageFunction;
+        }
+        
+        private executeCommandImpl(playId: number, commandName: string, commandParams: any): void {
+            let convertedCommandParams;
+            if ((typeof commandParams) === "string") {
+                try {
+                    convertedCommandParams = JSON.parse(commandParams);
+                } catch (error) {
+                    convertedCommandParams = commandParams;
+                }
+            } else {
+                convertedCommandParams = commandParams;
+            }
+            
+            this.sendMessageFunction({
+                playId: playId,
+                type: commandName,
+                params: convertedCommandParams,
+            });
+        }
+        
+        public getParameter(key: string):string {
+            return null;
+        }
+        
+        public mediaFinished(playId: number): void {
+            this.executeCommandImpl(
+                playId,
+                "PLAYBACK_STATE",
+                {
+                    type: "MEDIA_FINISHED",
+                }
+            );
+        }
+        
+        public mediaError(playId: number, message: string): void {
+            this.executeCommandImpl(
+                playId,
+                "PLAYBACK_STATE",
+                {
+                    type: "MEDIA_ERROR",
+                    message: message,
+                }
+            );
+        }
+        
+        public mediaReady(playId: number, started: boolean): void {
+            this.executeCommandImpl(
+                playId,
+                "PLAYBACK_STATE",
+                {
+                    type: "MEDIA_READY",
+                }
+            );
+        }
+        
+        public openMediaInZone(playId: number, mediaId: string, zoneId: number): void {
+            this.executeCommandImpl(
+                playId,
+                "MEDIA_PLAY",
+                {
+                    mediaId: mediaId, 
+                    zoneId: zoneId, 
+                }
+            );
+        }
+        
+        public executeCommand(playId: number, commandName: string, commandParams: string): void {
+            this.executeCommandImpl(playId, commandName, commandParams);
+        }
+        
+        public addPlaybackListener(playId: number, callbackMethod: string): void {
+            this.executeCommandImpl(
+                playId,
+                "NOTIFICATIONS_REGISTRATION",
+                {
+                    notificationType: "MEDIA_PLAYBACK", 
+                    callbackMethod: callbackMethod, 
+                }
+            );
+        }
+    }
 
     export class Loader {
         private dataJson: string;
@@ -122,15 +210,7 @@ module Mvision.Templates {
 
         constructor() {
             this.globalCallbackMethodNameCounter = 0;
-
-            if (!window.Player) {
-                window.Player = new PreviewPlayer();
-                window.addEventListener('message', (event) => {
-                    if (event && event.data && event.data.action && event.data.action === 'play') {
-                        this.play();
-                    }
-                });
-            }
+            
             this.dataJson = this.getParameterByName(QueryStrings.Data);
             this.playId = parseInt(this.getParameterByName(QueryStrings.PlayId));
             this.platformType = this.getParameterByName(QueryStrings.PlatformType);
@@ -138,10 +218,28 @@ module Mvision.Templates {
             if (isNaN(this.duration)) {
                 this.duration = PlaybackConstants.DurationAuto;
             }
-            this.started =
-                String(this.getParameterByName(QueryStrings.AutoPlay))
-                .toLowerCase()
-                !== 'false';
+            this.started = String(this.getParameterByName(QueryStrings.AutoPlay)).toLowerCase() !== 'false';
+
+            if (!window.Player) {
+                if ((typeof this.platformType === 'string') && this.platformType.includes("Cloud")) {
+                    window.Player = new EmbededPlayer(function(message) {
+                        window.parent.postMessage(
+                            {
+                                channel: "MvisionPlayerApi",
+                                payload: message
+                            }, 
+                            "*"
+                        );
+                    });
+                } else {
+                    window.Player = new PreviewPlayer();
+                    window.addEventListener('message', (event) => {
+                        if (event && event.data && event.data.action && event.data.action === 'play') {
+                            this.play();
+                        }
+                    });
+                }
+            }
 
             this.startPromise = new Promise<void>((resolve, reject) => {
                 this.startPromiseResolve = resolve;
