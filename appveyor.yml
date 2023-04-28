@@ -6,22 +6,19 @@
     only:
       - master
   skip_tags: true
-  image: Visual Studio 2022
+  image: Ubuntu2004
   version: 1.0.{build}
   init:
-    - ps: Install-Product node $env:nodejs_version
+    - nvm use 18.14.2
   environment:
-    nodejs_version: 18.16.0
     GIT_TERMINAL_PROMPT: 0
-    NPM_TOKEN:
-      secure: t02pBjLDijosWVNaZyKB3viVmV3XXiITw1+uwFQmOazIWWE3NPIZenanw1ohLjdQ
   install:
     - npm install
     - npm install -g gulp
   build_script:
     - gulp scripts
   after_build:
-    - ps: .\publish.ps1
+    - ./publish
   notifications:
   - provider: Email
     to:
