@@ -11,6 +11,8 @@
   environment:
     GIT_TERMINAL_PROMPT: 0
     NODEJS_VERSION: 18.16.0
+    NPM_TOKEN:
+      secure: t02pBjLDijosWVNaZyKB3viVmV3XXiITw1+uwFQmOazIWWE3NPIZenanw1ohLjdQ
   init:
     - nvm install $NODEJS_VERSION
     - nvm use $NODEJS_VERSION

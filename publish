@@ -1,4 +1,3 @@
 #!/bin/bash
 echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > $APPVEYOR_BUILD_FOLDER/".npmrc"
-cat $APPVEYOR_BUILD_FOLDER/".npmrc"
-#npm publish
+npm publish
