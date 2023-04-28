@@ -11,7 +11,7 @@
   init:
     - ps: Install-Product node $env:nodejs_version
   environment:
-    nodejs_version: 8.9.0
+    nodejs_version: 18.16.0
     GIT_TERMINAL_PROMPT: 0
     NPM_TOKEN:
       secure: t02pBjLDijosWVNaZyKB3viVmV3XXiITw1+uwFQmOazIWWE3NPIZenanw1ohLjdQ
@@ -25,9 +25,8 @@
   notifications:
   - provider: Email
     to:
-    - v.ciobanu@moodmedia.com
     - a.linca@moodmedia.com
-    - a.popa@moodmedia.com
+    - l.domsa@moodmedia.com
     subject: '[Appveyor] {{projectName}}/{{branch}}/{{buildVersion}} {{status}}'
     message: >-
       <div style="font-family:'Segoe UI',Arial,Sans-Serif;font-size:10pt;">
