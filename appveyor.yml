@@ -8,10 +8,12 @@
   skip_tags: true
   image: Ubuntu2004
   version: 1.0.{build}
-  init:
-    - nvm use 18.14.2
   environment:
     GIT_TERMINAL_PROMPT: 0
+    NODEJS_VERSION: 18.16.0
+  init:
+    - nvm install $NODEJS_VERSION
+    - nvm use $NODEJS_VERSION
   install:
     - npm install
     - npm install -g gulp
