@@ -20,6 +20,7 @@
   build_script:
     - gulp scripts
   after_build:
+    - chmod +x ./publish
     - ./publish
   notifications:
   - provider: Email
