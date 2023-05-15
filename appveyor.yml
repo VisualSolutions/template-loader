@@ -18,9 +18,8 @@
     - nvm use $NODEJS_VERSION
   install:
     - npm install
-    - npm install -g gulp
   build_script:
-    - gulp scripts
+    - npm run build_release
   after_build:
     - chmod +x ./publish
     - ./publish

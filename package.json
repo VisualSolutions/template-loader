@@ -1,10 +1,12 @@
 {
     "name": "mtemplate-loader",
-    "version": "1.0.35",
+    "version": "2.0.37",
     "description": "Template Loader / mframe parser",
     "main": "template-loader.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build_dev": "npx webpack --mode=development --target=web",
+        "build_release": "npx webpack --mode=production --target=web",
+        "lint": "npx eslint src/**/*"
     },
     "repository": {
         "type": "git",
@@ -17,8 +19,17 @@
     },
     "homepage": "https://github.com/VisualSolutions/template-loader#readme",
     "devDependencies": {
-        "gulp": "^4.0.2",
-        "gulp-typescript": "^6.0.0-alpha.1",
-        "typescript": "^5.0.4"
+        "@babel/cli": "^7.21.5",
+        "@babel/core": "^7.21.8",
+        "@babel/preset-env": "^7.21.5",
+        "babel-plugin-dynamic-import-node": "^2.3.3",
+        "eslint": "^8.40.0",
+        "ts-loader": "^9.4.2",
+        "typescript": "^5.0.4",
+        "webpack": "^5.82.1",
+        "webpack-cli": "^5.1.1"
+    },
+    "dependencies": {
+        "es6-shim": "^0.35.8"
     }
 }
