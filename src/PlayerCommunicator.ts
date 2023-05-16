@@ -44,6 +44,7 @@ export class PlayerCommunicator implements IPlayerCommunicator {
                 messageId,
                 new PromiseResolver(resolve, reject)
             );
+            setTimeout(() => this.processPendingPromise(messageId, null, "Request timeout"), 5000);
             this.messageSender(new Message(messageId, messageType, payload));
         });
     }
@@ -68,16 +69,7 @@ export class PlayerCommunicator implements IPlayerCommunicator {
         }
 
         if (message.messageType === "REQUEST_RESPONSE") {
-            const pendingPromise: PromiseResolver = this.pendingPromises.get(message.payload.requestMessageId);
-            if (pendingPromise) {
-                this.pendingPromises.delete(message.payload.requestMessageId);
-                if (message.payload.error) {
-                    pendingPromise.reject(message.payload.error);
-                } else {
-                    pendingPromise.resolve(message.payload.response);
-                }
-                
-            }
+            this.processPendingPromise(message.payload.requestMessageId, message.payload.response, message.payload.error);
             return;
         }
 
@@ -91,5 +83,18 @@ export class PlayerCommunicator implements IPlayerCommunicator {
             .forEach(subscriber => {
                 subscriber.onMessage(message);
             });
+    }
+
+    private processPendingPromise(messageId: number, result: any, error: any): void {
+        const pendingPromise: PromiseResolver = this.pendingPromises.get(messageId);
+        if (pendingPromise) {
+            this.pendingPromises.delete(messageId);
+            if (error) {
+                pendingPromise.reject(error);
+            } else {
+                pendingPromise.resolve(result);
+            }
+            
+        }
     }
 }
