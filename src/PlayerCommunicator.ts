@@ -4,10 +4,12 @@ class PromiseResolver {
 
     readonly resolve: (value?: any) => void;
     readonly reject: (reason?: any) => void;
+    readonly timeoutId: any;
 
-    constructor(resolve: (value?: any) => void, reject: (reason?: any) => void) {
+    constructor(resolve: (value?: any) => void, reject: (reason?: any) => void, timeoutId: any) {
         this.resolve = resolve;
         this.reject = reject;
+        this.timeoutId = timeoutId;
     }
 }
 
@@ -39,12 +41,15 @@ export class PlayerCommunicator implements IPlayerCommunicator {
 
     sendMessage(messageType: string, payload: any): Promise<any> {
         const messageId = this.messageIdGenerator ++;
+        if (messageType === "REQUEST_ACKNOWLEDGE" || messageType === "REQUEST_RESPONSE") {
+            return Promise.resolve();
+        }
         return new Promise<any>((resolve, reject) => {
+            const timeoutId = setTimeout(() => this.processPendingPromise(messageId, null, "Request timeout"), 5000);
             this.pendingPromises.set(
                 messageId,
-                new PromiseResolver(resolve, reject)
+                new PromiseResolver(resolve, reject, timeoutId)
             );
-            setTimeout(() => this.processPendingPromise(messageId, null, "Request timeout"), 5000);
             this.messageSender(new Message(messageId, messageType, payload));
         });
     }
@@ -89,12 +94,12 @@ export class PlayerCommunicator implements IPlayerCommunicator {
         const pendingPromise: PromiseResolver = this.pendingPromises.get(messageId);
         if (pendingPromise) {
             this.pendingPromises.delete(messageId);
+            clearTimeout(pendingPromise.timeoutId);
             if (error) {
                 pendingPromise.reject(error);
             } else {
                 pendingPromise.resolve(result);
             }
-            
         }
     }
 }
