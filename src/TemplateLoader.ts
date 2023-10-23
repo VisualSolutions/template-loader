@@ -84,13 +84,13 @@ export class Loader {
         this.started = String(this.getParameterByName('autoPlay')).toLowerCase() !== 'false';
 
         if (!window.Player) {
-            if ((typeof this.platformType === 'string') && this.platformType.includes("Cloud")) {
+            if ((typeof this.platformType === 'string') && this.platformType === "WebStreaming") {
                 window.Player = new RemotePlayer(function(message) {
                     window.parent.postMessage(
                         {
                             channel: "MvisionPlayerApi",
                             payload: message
-                        }, 
+                        },
                         "*"
                     );
                 });
