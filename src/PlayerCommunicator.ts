@@ -35,7 +35,7 @@ export class PlayerCommunicator implements IPlayerCommunicator {
         this.messageSender = messageSender;
 
         this.pendingPromises = new Map();
-        this.subscribers = new Array();
+        this.subscribers = [];
         this.messageIdGenerator = 1;
     }
 

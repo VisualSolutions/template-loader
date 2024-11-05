@@ -81,7 +81,11 @@ export class Loader {
         if (isNaN(this.duration)) {
             this.duration = PlaybackConstants.DurationAuto;
         }
-        this.started = String(this.getParameterByName('autoPlay')).toLowerCase() !== 'false';
+        let autoPlayParameter: string = this.getParameterByName('autoPlay');
+        if (autoPlayParameter) {
+            autoPlayParameter = autoPlayParameter.toLowerCase();
+        }
+        this.started = autoPlayParameter !== 'false';
 
         if (!window.Player) {
             if ((typeof this.platformType === 'string') && this.platformType === "WebStreaming") {
@@ -287,11 +291,11 @@ export class Loader {
         this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, {});
     }
 
-    public openSettingsApp(params: Object = {}): void {
+    public openSettingsApp(params: object = {}): void {
         this.executeCommand(PlaybackCommands.OpenSettingsApp, params);
     }
 
-    public openApp(appId:String): void {
+    public openApp(appId:string): void {
         this.executeCommand(PlaybackCommands.OpenApp, {appId:appId});
     }
 
@@ -403,7 +407,7 @@ export class Loader {
         );
     }
 
-    public createAnalyticsEvent(userTriggered: boolean, sessionId: string, customParameters: Object): void {
+    public createAnalyticsEvent(userTriggered: boolean, sessionId: string, customParameters: object): void {
         this.executeCommand(PlaybackCommands.CreateAnalyticsLog, {
             userTriggered: userTriggered,
             sessionId: sessionId,
@@ -412,8 +416,7 @@ export class Loader {
     }
 
     public isMediaFileAvailable(mediaId: number): boolean {
-        let resultString = this.executeCommand(PlaybackCommands.IsMediaFileAvailable, mediaId);
-        return resultString == "true";
+        return this.executeCommand(PlaybackCommands.IsMediaFileAvailable, mediaId) == "true";
     }
 
     public areMediaFilesAvailable(mediaIds: number[]): Promise<boolean[]> {
@@ -450,14 +453,14 @@ export class Loader {
         );
     }
 
-    public setPlaylistItemsSchedules(schedules: Array<Object>): void {
+    public setPlaylistItemsSchedules(schedules: Array<object>): void {
         this.executeCommand(
             "SET_PLAYLIST_ITEMS_SCHEDULES",
             schedules
         );
     }
 
-    public executeCommand(commandName: string, commandParams: Object): any {
+    public executeCommand(commandName: string, commandParams: any): any {
         try {
             return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
         } catch (err) {
@@ -466,7 +469,7 @@ export class Loader {
         }
     }
 
-    public executeCommandReturnPromise(commandName: string, commandParams: Object): Promise<any> {
+    public executeCommandReturnPromise(commandName: string, commandParams: any): Promise<any> {
         const successMethodName = this.getNextGlobalCallbackMethodName();
         const errorMethodName = this.getNextGlobalCallbackMethodName();
         const finalPlayId = this.playId;
@@ -505,10 +508,10 @@ export class Loader {
         }
     }
 
-    private getParameterByName(name, url = window.location.href) {
+    private getParameterByName(name, url = window.location.href): string {
         if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        name = name.replace(/[[\]]/g, "\\$&");
+        const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
             results = regex.exec(url);
         if (!results) return null;
         if (!results[2]) return '';
@@ -516,20 +519,20 @@ export class Loader {
     }
 
     private getDataJson() {
-        var mframeUrl = this.dataJson;
+        let mframeUrl = this.dataJson;
         if (!mframeUrl) {
             mframeUrl = 'mframe.json?timestamp=' + new Date().getTime();
         }
 
-        var xhttp = new XMLHttpRequest();
+        const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = () => {
             if (this.platformType === "tizen") {
                 if (xhttp.readyState === 4) {
                     if (xhttp.status === 200 || xhttp.status === 0) {
                         if (xhttp.responseText !== null) {
+                            const components: Component[] = [];
                             try {
-                                var dataJson = JSON.parse(xhttp.responseText);
-                                components = [];
+                                const dataJson = JSON.parse(xhttp.responseText);
                                 dataJson.components.forEach(c => {
                                     if (typeof c.type === 'number' && c.params) {
                                         // Hack to allow old/deprecated components.
@@ -557,10 +560,9 @@ export class Loader {
 
             } else {
                 if (xhttp.readyState === 4 && xhttp.status === 200) {
-                    var components: Component[];
+                    const components: Component[] = [];
                     try {
-                        var dataJson = JSON.parse(xhttp.responseText);
-                        components = [];
+                        const dataJson = JSON.parse(xhttp.responseText);
                         dataJson.components.forEach(c => {
                             if (typeof c.type === 'number' && c.params) {
                                 // Hack to allow old/deprecated components.
