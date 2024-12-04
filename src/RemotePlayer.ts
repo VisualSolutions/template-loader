@@ -2,9 +2,9 @@ import { IPlayer } from "./IPlayer";
 
 export class RemotePlayer implements IPlayer {
     
-    private sendMessageFunction: Function;
+    private sendMessageFunction: (message: object) => void;
     
-    constructor(sendMessageFunction: Function) {
+    constructor(sendMessageFunction: (message: object) => void) {
         this.sendMessageFunction = sendMessageFunction;
     }
     
