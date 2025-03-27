@@ -3,6 +3,7 @@ import { PreviewPlayer } from "./PreviewPlayer";
 import { RemotePlayer } from "./RemotePlayer";
 import { PlayerCommunicator } from "./PlayerCommunicator";
 import { IPlayerCommunicator, Message } from "./IPlayerCommunicator";
+import { callMethod } from "./utils";
 
 declare global {
     interface Window {
@@ -88,7 +89,23 @@ export class Loader {
         this.started = autoPlayParameter !== 'false';
 
         if (!window.Player) {
-            if ((typeof this.platformType === 'string') && this.platformType === "WebStreaming") {
+            if (window.self !== window.top) {
+                /**
+                 * running inside iframe
+                 */
+                window.addEventListener('message', function(message) {
+                    if (!message 
+                        || !message.data 
+                        || !message.data.payload
+                        || "MvisionPlayerApi" != message.data.channel) {
+                        return;
+                    }
+
+                    if (message.data.payload.type === "ExecuteJavaScript") {
+                        callMethod(window, message.data.payload.method, message.data.payload.params);
+                    }
+                });
+
                 window.Player = new RemotePlayer(function(message) {
                     window.parent.postMessage(
                         {
