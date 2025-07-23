@@ -1,13 +1,25 @@
 import { IPlayer } from "./IPlayer";
-import { PreviewPlayer } from "./PreviewPlayer";
 import { RemotePlayer } from "./RemotePlayer";
 import { PlayerCommunicator } from "./PlayerCommunicator";
 import { IPlayerCommunicator, Message } from "./IPlayerCommunicator";
 import { callMethod } from "./utils";
+import { DummyPlayer } from "./DummyPlayer";
+
+type StartupParameters = {
+    playId: number;
+    platformType: string;
+    platformTypeHeadless: boolean;
+    duration: number;
+    mframeUrl: string;
+    mframeData: string | null;
+    autoPlay: boolean;
+}
 
 declare global {
     interface Window {
+        LoaderStartupParameters: StartupParameters;
         Player: IPlayer;
+        Loader: Loader;
     }
 }
 
@@ -15,7 +27,7 @@ export class PlaybackConstants {
     public static DurationAuto = -1;
 }
 
-class PlaybackCommands {
+class LegacyPlaybackCommandsAliases {
     public static OpenMediaInZone = 'openMediaInZone';
     public static PlaybackActionInZone = 'playbackActionInZone';
     public static PlaylistDataRequest = 'playlistDataRequest';
@@ -38,101 +50,33 @@ class PlaybackCommands {
     public static IsMediaFileAvailable = 'isMediaFileAvailable';
 }
 
-export class Param {
-    constructor(public name: string, public type: string, public value: any) {
-    }
-}
-
-export class Component {
-    static CreateTypelessComponent(name: string, params: Param[]) {
-        return new this(name, null, params);
-    }
-    constructor(public name: string, public type: string, public params: Param[]) {
-    }
-}
-
-export class ComponentV1 {
-    constructor(public type, public value) {
-    }
-}
-
 export class Loader {
     
-    private dataJson: string;
-    private playId: number;
-    private platformType: string;
-    private duration: number;
+    private readonly startupParameters: StartupParameters;
+    private readonly communicator: IPlayerCommunicator;
+
     private started: boolean;
-    private componentsPromise: Promise<Component[]>;
-    private componentsPromiseResolve: (data: Component[]) => void;
+    private componentsPromise: Promise<any>;
+    private componentsPromiseResolve: (data: any) => void;
     private startPromise: Promise<void>;
     private startPromiseResolve: () => void;
-
-    private readonly communicator: IPlayerCommunicator;
 
     private globalCallbackMethodNameCounter: number;
 
     constructor() {
-        this.globalCallbackMethodNameCounter = 0;
+        this.startupParameters = Loader.readStartupParameters();
+        this.communicator = Loader.initializeCommunicator(message => this.executeCommand("COMMUNICATOR_MESSAGE", message));
 
-        this.dataJson = this.getParameterByName('data');
-        this.playId = parseInt(this.getParameterByName('playId'));
-        this.platformType = this.getParameterByName('platformType');
-        this.duration = parseInt(this.getParameterByName('duration'));
-        if (isNaN(this.duration)) {
-            this.duration = PlaybackConstants.DurationAuto;
-        }
-        let autoPlayParameter: string = this.getParameterByName('autoPlay');
-        if (autoPlayParameter) {
-            autoPlayParameter = autoPlayParameter.toLowerCase();
-        }
-        this.started = autoPlayParameter !== 'false';
+        this.globalCallbackMethodNameCounter = 0;
+        this.started = this.startupParameters.autoPlay;
 
         if (!window.Player) {
             if (window.self !== window.top) {
-                /**
-                 * running inside iframe
-                 */
-                window.addEventListener('message', function(message) {
-                    if (!message 
-                        || !message.data 
-                        || !message.data.payload
-                        || "MvisionPlayerApi" != message.data.channel) {
-                        return;
-                    }
-
-                    if (message.data.payload.type === "ExecuteJavaScript") {
-                        callMethod(window, message.data.payload.method, message.data.payload.params);
-                    }
-                });
-
-                window.Player = new RemotePlayer(function(message) {
-                    window.parent.postMessage(
-                        {
-                            channel: "MvisionPlayerApi",
-                            payload: message
-                        },
-                        "*"
-                    );
-                });
+                window.Player = Loader.createIframePlayer();
             } else {
-                window.Player = new PreviewPlayer();
-                window.addEventListener('message', (event) => {
-                    if (event && event.data && event.data.action && event.data.action === 'play') {
-                        this.play();
-                    }
-                });
+                window.Player = new DummyPlayer();
             }
         }
-
-        const communicator: PlayerCommunicator = new PlayerCommunicator(message => {
-            return this.executeCommand("COMMUNICATOR_MESSAGE", message);
-        });
-        window["messageFromPlayer"] = (message: Message) => {
-            communicator.onMessageReceived(message);
-        };
-
-        this.communicator = communicator;
 
         this.startPromise = new Promise<void>((resolve, reject) => {
             this.startPromiseResolve = resolve;
@@ -142,11 +86,59 @@ export class Loader {
             this.startPromiseResolve();
         }
 
-        this.componentsPromise = new Promise<Component[]>((resolve, reject) => {
+        this.componentsPromise = new Promise<any>((resolve, reject) => {
             this.componentsPromiseResolve = resolve;
         });
-        
-        this.getDataJson();
+    }
+
+    private static createIframePlayer(): IPlayer {
+        window.addEventListener('message', function(message) {
+            if (!message 
+                || !message.data 
+                || !message.data.payload
+                || "MvisionPlayerApi" != message.data.channel) {
+                return;
+            }
+
+            if (message.data.payload.type === "ExecuteJavaScript") {
+                callMethod(window, message.data.payload.method, message.data.payload.params);
+            }
+        });
+
+        return new RemotePlayer(function(message) {
+            window.parent.postMessage(
+                {
+                    channel: "MvisionPlayerApi",
+                    payload: message
+                },
+                "*"
+            );
+        })
+    }
+
+    private static readStartupParameters(): StartupParameters {
+        if (window.LoaderStartupParameters) {
+            return window.LoaderStartupParameters;
+        }
+
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        return {
+            mframeUrl: urlSearchParams.get("data") || "./mframe.json?timestamp=" + Date.now(),
+            mframeData: null,
+            playId: parseInt(urlSearchParams.get("playId") || "0"),
+            duration: parseInt(urlSearchParams.get("duration") || PlaybackConstants.DurationAuto.toString()),
+            autoPlay: (urlSearchParams.get("autoPlay") || "true").toLowerCase() !== "false",
+            platformType: urlSearchParams.get("platformType") || "unknown",
+            platformTypeHeadless: false,
+        };
+    }
+
+    private static initializeCommunicator(messageSender: (message: Message) => void): IPlayerCommunicator {
+        const communicator: PlayerCommunicator = new PlayerCommunicator(messageSender);
+        window["messageFromPlayer"] = (message: Message) => {
+            communicator.onMessageReceived(message);
+        };
+        return communicator;
     }
 
     private getNextGlobalCallbackMethodName(): string {
@@ -154,14 +146,7 @@ export class Loader {
         return "mvisionGlobalCallbackMethodName" + this.globalCallbackMethodNameCounter;
     }
 
-    public setComponents(components:any): void {
-        this.componentsPromise = new Promise<Component[]>((resolve, reject) => {
-            this.componentsPromiseResolve = resolve;
-            this.componentsPromiseResolve(components);
-        });
-    }
-
-    public getComponents(): Promise<Component[]> {
+    public getComponents(): Promise<any> {
         return this.componentsPromise;
     }
 
@@ -174,32 +159,36 @@ export class Loader {
     }
 
     public getPlatformType():string {
-        return this.platformType;
+        return this.startupParameters.platformType;
+    }
+
+    public isHeadlessPlatform():boolean {
+        return this.startupParameters.platformTypeHeadless;
     }
 
     public getDuration():number {
-        return this.duration;
+        return this.startupParameters.duration;
     }
 
     public ifDurationNotSetEndIn(templateDurationInSeconds:number) {
-        if (this.duration == PlaybackConstants.DurationAuto) {
+        if (this.startupParameters.duration == PlaybackConstants.DurationAuto) {
             setTimeout(this.finished, templateDurationInSeconds * 1000);
         }
     }
 
     public ready(): void {
-        window.Player.mediaReady(this.playId, this.started);
+        window.Player.mediaReady(this.startupParameters.playId, this.started);
     }
 
     public error(message: string): void {
         if (!message) {
             message = "Unspecified error.";
         }
-        window.Player.mediaError(this.playId, message);
+        window.Player.mediaError(this.startupParameters.playId, message);
     }
 
     public finished(): void {
-        window.Player.mediaFinished(this.playId);
+        window.Player.mediaFinished(this.startupParameters.playId);
     }
 
     public getPlayerParameter(key: string): string {
@@ -221,38 +210,27 @@ export class Loader {
     }
 
     public openMediaInZone(mediaId: string, zoneId: number, loop: boolean = false, startMode: string = null): void {
-        try {
-            if (!loop && !startMode) {
-                // legacy method, for android players with version 5.4.2-190102
-                // should delete this conditional in the future
-                window.Player.openMediaInZone(this.playId, mediaId, zoneId);
-            } else {
-                this.executeCommand(PlaybackCommands.OpenMediaInZone,
-                        {mediaId:mediaId, zoneId:zoneId, loop:loop, startMode: startMode});
-            }
-        } catch (err) {
-            // method not implemented
-        }
+        this.executeCommand(LegacyPlaybackCommandsAliases.OpenMediaInZone, {mediaId:mediaId, zoneId:zoneId, loop:loop, startMode: startMode});
     }
 
     public stopPlaybackInZone(zoneId: number): void {
-        this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"STOP", zoneId:zoneId});
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"STOP", zoneId:zoneId});
     }
 
     public resumeLoopPlaybackInZone(zoneId: number): void {
-        this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"RESUME_LOOP_PLAYBACK", zoneId:zoneId});
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"RESUME_LOOP_PLAYBACK", zoneId:zoneId});
     }
 
     public clearPendingEventsInZone(zoneId: number): void {
-        this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneId:zoneId});
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneId:zoneId});
     }
 
     public playNextInZone(zoneId: number): void {
-        this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"PLAY_NEXT", zoneId:zoneId});
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"PLAY_NEXT", zoneId:zoneId});
     }
 
     public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean, behind: boolean = false, loopingMediaId: string = null): void {
-        this.executeCommand(PlaybackCommands.CreateCustomZone, {
+        this.executeCommand(LegacyPlaybackCommandsAliases.CreateCustomZone, {
             zoneName:zoneName, 
             coordinates:{left:left, top:top, width:width, height:height},
             behind:behind, 
@@ -262,41 +240,41 @@ export class Loader {
     }
 
     public deleteCustomZone(zoneName: string): void {
-        this.executeCommand(PlaybackCommands.DeleteCustomZone, {zoneName:zoneName});
+        this.executeCommand(LegacyPlaybackCommandsAliases.DeleteCustomZone, {zoneName:zoneName});
     }
 
     public openMediaInCustomZone(mediaId: string, zoneName: string, loop: boolean = false, startMode: string = null): void {
-        this.executeCommand(PlaybackCommands.OpenMediaInZone,
+        this.executeCommand(LegacyPlaybackCommandsAliases.OpenMediaInZone,
                 {mediaId:mediaId, zoneName:zoneName, loop:loop, startMode: startMode});
     }
 
     public stopPlaybackInCustomZone(zoneName: string): void {
-        this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"STOP", zoneName:zoneName});
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"STOP", zoneName:zoneName});
     }
 
     public resumeLoopPlaybackInCustomZone(zoneName: string): void {
-        this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"RESUME_LOOP_PLAYBACK", zoneName:zoneName});
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"RESUME_LOOP_PLAYBACK", zoneName:zoneName});
     }
 
     public clearPendingEventsInCustomZone(zoneName: string): void {
-        this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneName:zoneName});
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"CLEAR_PENDING_EVENTS", zoneName:zoneName});
     }
 
     public playNextInCustomZone(zoneName: string): void {
-        this.executeCommand(PlaybackCommands.PlaybackActionInZone, {type:"PLAY_NEXT", zoneName:zoneName});
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"PLAY_NEXT", zoneName:zoneName});
     }
 
     public closePlaybackApp(): void {
-        this.executeCommand(PlaybackCommands.ClosePlaybackApp, {});
+        this.executeCommand(LegacyPlaybackCommandsAliases.ClosePlaybackApp, {});
     }
 
     public openHomeApp(): void {
-        this.executeCommand(PlaybackCommands.OpenHomeApp, {});
+        this.executeCommand(LegacyPlaybackCommandsAliases.OpenHomeApp, {});
     }
 
     public openVodApp(initialFolderIdentifier: string = null, allowUpNavigationFromInitialFolder: boolean = false): void {
         this.executeCommand(
-            PlaybackCommands.OpenVodApp, 
+            LegacyPlaybackCommandsAliases.OpenVodApp, 
             {
                 initialFolderIdentifier: initialFolderIdentifier,
                 allowUpNavigationFromInitialFolder: allowUpNavigationFromInitialFolder
@@ -305,72 +283,72 @@ export class Loader {
     }
 
     public openDiagnosticsApp(): void {
-        this.executeCommand(PlaybackCommands.OpenDiagnosticsApp, {});
+        this.executeCommand(LegacyPlaybackCommandsAliases.OpenDiagnosticsApp, {});
     }
 
     public openSettingsApp(params: object = {}): void {
-        this.executeCommand(PlaybackCommands.OpenSettingsApp, params);
+        this.executeCommand(LegacyPlaybackCommandsAliases.OpenSettingsApp, params);
     }
 
     public openApp(appId:string): void {
-        this.executeCommand(PlaybackCommands.OpenApp, {appId:appId});
+        this.executeCommand(LegacyPlaybackCommandsAliases.OpenApp, {appId:appId});
     }
 
     public getMusicStreamTracks(callbackFunction): void {
-        this.executeCommand(PlaybackCommands.PlaylistDataRequest,
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaylistDataRequest,
             {dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name});
     }
 
     public getActiveMusicPlaylistDataAndTracks(callbackFunction): void {
-        this.executeCommand(PlaybackCommands.PlaylistDataRequest,
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaylistDataRequest,
             {dataType: "ACTIVE_MUSIC_PLAYLIST_DATA_AND_TRACKS", responseCallbackMethod: callbackFunction.name});
     }
 
     public getActiveMusicPlaylistData(callbackFunction): void {
-        this.executeCommand(PlaybackCommands.PlaylistDataRequest,
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaylistDataRequest,
             {dataType: "ACTIVE_MUSIC_PLAYLIST_DATA", responseCallbackMethod: callbackFunction.name});
     }
 
     public getPlaylistContainerItems(playlistId: number, callbackFunction): void {
-        this.executeCommand(PlaybackCommands.PlaylistDataRequest,
+        this.executeCommand(LegacyPlaybackCommandsAliases.PlaylistDataRequest,
             {dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name});
     }
 
     public voteMusicTrack(id: number): void {
-        this.executeCommand(PlaybackCommands.VotingPlaylistRequest,
+        this.executeCommand(LegacyPlaybackCommandsAliases.VotingPlaylistRequest,
             {action: "VOTE", referenceItem: id});
     }
 
     public getVotedTracks(callbackFunction): void {
-        this.executeCommand(PlaybackCommands.VotingPlaylistRequest,
+        this.executeCommand(LegacyPlaybackCommandsAliases.VotingPlaylistRequest,
             {action: "GET_VOTED_ITEMS", responseCallbackMethod: callbackFunction.name});
     }
 
     public addPlaybackListener(callbackFunction): void {
         try {
-            window.Player.addPlaybackListener(this.playId, callbackFunction.name);
+            window.Player.addPlaybackListener(this.startupParameters.playId, callbackFunction.name);
         } catch (err) {
             console.log("Error while calling Player method: " + err);
         }
     }
 
     public addPlaylistUpdateListener(callbackFunction): void {
-        this.executeCommand(PlaybackCommands.RegisterNotifications,
+        this.executeCommand(LegacyPlaybackCommandsAliases.RegisterNotifications,
                 {notificationType:"PLAYBACK_STREAM_UPDATED", callbackMethod:callbackFunction.name});
     }
 
     public addActiveMusicPlaylistChangeListener(callbackFunction): void {
-        this.executeCommand(PlaybackCommands.RegisterNotifications,
+        this.executeCommand(LegacyPlaybackCommandsAliases.RegisterNotifications,
                 {notificationType:"ACTIVE_MUSIC_PLAYLIST_CHANGED", callbackMethod:callbackFunction.name});
     }
     
     public sendChannelMessage(clientId: string, channelName: string, payload: string): void {
-        this.executeCommand(PlaybackCommands.SendChannelMessage,
+        this.executeCommand(LegacyPlaybackCommandsAliases.SendChannelMessage,
             {clientId:clientId, channelName:channelName, payload:payload});
     }
 
     public joinChannel(clientId: string, channelName: string, callbackFunction): void {
-        this.executeCommand(PlaybackCommands.JoinChannel,
+        this.executeCommand(LegacyPlaybackCommandsAliases.JoinChannel,
             {clientId:clientId, channelName:channelName, callbackMethod:callbackFunction.name});
     }
 
@@ -380,7 +358,7 @@ export class Loader {
 
     public sendSerialMessageToTargetDevice(targetProductId: string, baudRate: number, dataType: string, data: string, ignoreResponse: boolean = false): Promise<string> {
         return this.executeCommandReturnPromise(
-            PlaybackCommands.SendSerialMessage,
+            LegacyPlaybackCommandsAliases.SendSerialMessage,
             {
                 serialMessageRequest: {
                     targetProductId:targetProductId,
@@ -399,7 +377,7 @@ export class Loader {
 
     public receiveSerialMessagesFromTargetDevice(targetProductId: string, baudRate: number, dataType: string, retryOnError: boolean, callbackFunction, errorCallbackFunction): void {
         this.executeCommand(
-            PlaybackCommands.ReceiveSerialMessages,
+            LegacyPlaybackCommandsAliases.ReceiveSerialMessages,
             {
                 serialMessageRequest: {
                     targetProductId:targetProductId,
@@ -414,7 +392,7 @@ export class Loader {
     }
     
     public getNewAnalyticsSessionId(): string {
-        return this.executeCommand(PlaybackCommands.GetNewAnalyticsSessionId, null);
+        return this.executeCommand(LegacyPlaybackCommandsAliases.GetNewAnalyticsSessionId, null);
     }
 
     public getNewAnalyticsSessionIdPromise(): Promise<string> {
@@ -425,7 +403,7 @@ export class Loader {
     }
 
     public createAnalyticsEvent(userTriggered: boolean, sessionId: string, customParameters: object): void {
-        this.executeCommand(PlaybackCommands.CreateAnalyticsLog, {
+        this.executeCommand(LegacyPlaybackCommandsAliases.CreateAnalyticsLog, {
             userTriggered: userTriggered,
             sessionId: sessionId,
             customParameters: customParameters
@@ -433,7 +411,7 @@ export class Loader {
     }
 
     public isMediaFileAvailable(mediaId: number): boolean {
-        return this.executeCommand(PlaybackCommands.IsMediaFileAvailable, mediaId) == "true";
+        return this.executeCommand(LegacyPlaybackCommandsAliases.IsMediaFileAvailable, mediaId) == "true";
     }
 
     public areMediaFilesAvailable(mediaIds: number[]): Promise<boolean[]> {
@@ -479,7 +457,7 @@ export class Loader {
 
     public executeCommand(commandName: string, commandParams: any): any {
         try {
-            return window.Player.executeCommand(this.playId, commandName, JSON.stringify(commandParams));
+            return window.Player.executeCommand(this.startupParameters.playId, commandName, JSON.stringify(commandParams));
         } catch (err) {
             console.log("Error while calling Player method: " + err);
             return null;
@@ -489,7 +467,6 @@ export class Loader {
     public executeCommandReturnPromise(commandName: string, commandParams: any): Promise<any> {
         const successMethodName = this.getNextGlobalCallbackMethodName();
         const errorMethodName = this.getNextGlobalCallbackMethodName();
-        const finalPlayId = this.playId;
         return new Promise<any>(function(resolve, reject) {
             const clearData = function() {
                 delete window[successMethodName];
@@ -510,7 +487,7 @@ export class Loader {
             commandParams["errorCallbackMethod"] = errorMethodName;
 
             try {
-                window.Player.executeCommand(finalPlayId, commandName, JSON.stringify(commandParams));
+                window.Player.executeCommand(this.startupParameters.playId, commandName, JSON.stringify(commandParams));
             } catch (err) {
                 clearData();
                 reject(err);
@@ -525,88 +502,37 @@ export class Loader {
         }
     }
 
-    private getParameterByName(name, url = window.location.href): string {
-        if (!url) url = window.location.href;
-        name = name.replace(/[[\]]/g, "\\$&");
-        const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
-
-    private getDataJson() {
-        let mframeUrl = this.dataJson;
-        if (!mframeUrl) {
-            mframeUrl = 'mframe.json?timestamp=' + new Date().getTime();
+    public loadDataJson() {
+        if (this.startupParameters.mframeData) {
+            try {
+                this.componentsPromiseResolve(JSON.parse(this.startupParameters.mframeData).components);
+            } catch (err) {
+                this.error("Error loading mframe.json: " + err);
+            }
+            return;
         }
 
-        const xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = () => {
-            if (this.platformType === "tizen") {
-                if (xhttp.readyState === 4) {
-                    if (xhttp.status === 200 || xhttp.status === 0) {
-                        if (xhttp.responseText !== null) {
-                            const components: Component[] = [];
-                            try {
-                                const dataJson = JSON.parse(xhttp.responseText);
-                                dataJson.components.forEach(c => {
-                                    if (typeof c.type === 'number' && c.params) {
-                                        // Hack to allow old/deprecated components.
-                                        components.push(<any>new ComponentV1(c.type, c.params.value));
-                                    }
-                                    if (typeof c.type === 'string') {
-                                        components.push(new Component(c.name, c.type, c.params.map(p => new Param(p.name, p.type, p.value))));
-                                    }
-                                    else {
-                                        components.push(Component.CreateTypelessComponent(c.name, c.params.map(p => new Param(p.name, p.type, p.value))));
-                                    }
-                                });
-                            } catch (err) {
-                                this.error("Error parsing " + mframeUrl + ": " + err.toString());
-                                return;
-                            }
+        const httpRequest = new XMLHttpRequest();
 
-                            this.componentsPromiseResolve(components);
-                        } else {
-                            xhttp.open('GET', mframeUrl);
-                            xhttp.send();
-                        }
-                    }
+        httpRequest.onload = () => {
+            try {
+                if (httpRequest.status !== 200) {
+                    throw new Error("HTTP error statusCode=" + httpRequest.status);
                 }
+                this.componentsPromiseResolve(JSON.parse(httpRequest.responseText).components);
+            } catch (err) {
+                this.error("Error loading mframe.json: " + err);
+            }
+        };
 
-            } else {
-                if (xhttp.readyState === 4 && xhttp.status === 200) {
-                    const components: Component[] = [];
-                    try {
-                        const dataJson = JSON.parse(xhttp.responseText);
-                        dataJson.components.forEach(c => {
-                            if (typeof c.type === 'number' && c.params) {
-                                // Hack to allow old/deprecated components.
-                                components.push(<any>new ComponentV1(c.type, c.params.value));
-                            }
-                            if (typeof c.type === 'string') {
-                                components.push(new Component(c.name, c.type, c.params.map(p => new Param(p.name, p.type, p.value))));
-                            }
-                            else {
-                                components.push(Component.CreateTypelessComponent(c.name, c.params.map(p => new Param(p.name, p.type, p.value))));
-                            }
-                        });
-                    } catch (err) {
-                        this.error("Error parsing " + mframeUrl + ": " + err.toString());
-                        return;
-                    }
-
-                    this.componentsPromiseResolve(components);
-                } else if (xhttp.readyState === 4) {
-                    this.error("Error loading " + mframeUrl + ", httpStatus=" + xhttp.status);
-                }
-            };
+        httpRequest.onerror = () => {
+            this.error("Error loading mframe.json: HTTP error statusCode=" + httpRequest.status);
         }
 
-        xhttp.open('GET', mframeUrl);
-        xhttp.send();
+        httpRequest.open('GET', this.startupParameters.mframeUrl, true);
+        httpRequest.send();
     }
 }
 
-window['Loader'] = window['Loader'] || new Loader();
+window.Loader = new Loader();
+window.Loader.loadDataJson();
