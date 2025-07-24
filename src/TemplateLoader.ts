@@ -535,5 +535,7 @@ export class Loader {
     }
 }
 
-window.Loader = new Loader();
-window.Loader.loadDataJson();
+if (!window.Loader) {
+    window.Loader = new Loader();
+    window.Loader.loadDataJson();
+}
