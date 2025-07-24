@@ -467,6 +467,7 @@ export class Loader {
     public executeCommandReturnPromise(commandName: string, commandParams: any): Promise<any> {
         const successMethodName = this.getNextGlobalCallbackMethodName();
         const errorMethodName = this.getNextGlobalCallbackMethodName();
+        const finalPlayId = this.startupParameters.playId
         return new Promise<any>(function(resolve, reject) {
             const clearData = function() {
                 delete window[successMethodName];
@@ -487,7 +488,7 @@ export class Loader {
             commandParams["errorCallbackMethod"] = errorMethodName;
 
             try {
-                window.Player.executeCommand(this.startupParameters.playId, commandName, JSON.stringify(commandParams));
+                window.Player.executeCommand(finalPlayId, commandName, JSON.stringify(commandParams));
             } catch (err) {
                 clearData();
                 reject(err);
