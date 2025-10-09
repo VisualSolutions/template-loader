@@ -42,8 +42,10 @@ export class PlayerCommunicator implements IPlayerCommunicator {
     sendMessage(messageType: string, payload: any): Promise<any> {
         const messageId = this.messageIdGenerator ++;
         if (messageType === "REQUEST_ACKNOWLEDGE" || messageType === "REQUEST_RESPONSE") {
+            this.messageSender(new Message(messageId, messageType, payload));
             return Promise.resolve();
         }
+
         return new Promise<any>((resolve, reject) => {
             const timeoutId = setTimeout(() => this.processPendingPromise(messageId, null, "Request timeout"), 5000);
             this.pendingPromises.set(
@@ -52,6 +54,35 @@ export class PlayerCommunicator implements IPlayerCommunicator {
             );
             this.messageSender(new Message(messageId, messageType, payload));
         });
+    }
+
+    private sendAcknowledge(request : Message): void {
+        this.sendMessage(
+            "REQUEST_ACKNOWLEDGE",
+            {requestMessageId: request.id}
+        );
+    }
+
+    sendResponse(request : Message, response: any): void {
+        this.sendMessage(
+            "REQUEST_RESPONSE",
+            {
+                requestMessageId: request.id,
+                response: response,
+                error: null,
+            }
+        );
+    }
+
+    sendError(request : Message, error: string): void {
+        this.sendMessage(
+            "REQUEST_RESPONSE",
+            {
+                requestMessageId: request.id,
+                response: null,
+                error: error,
+            }
+        );
     }
 
     subscribe(messageType: string, onMessage: (message: Message) => void): Subscription {
@@ -78,10 +109,7 @@ export class PlayerCommunicator implements IPlayerCommunicator {
             return;
         }
 
-        this.sendMessage(
-            "REQUEST_ACKNOWLEDGE",
-            {requestMessageId: message.id}
-        );
+        this.sendAcknowledge(message);
 
         this.subscribers
             .filter(subscriber => subscriber.messageType === message.messageType)
