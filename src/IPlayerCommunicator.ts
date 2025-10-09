@@ -17,6 +17,8 @@ export interface Subscription {
 }
 
 export interface IPlayerCommunicator {
-    sendMessage(requestName: string, payload: any): Promise<any>;
+    sendMessage(messageType: string, payload: any): Promise<any>;
+    sendResponse(request : Message, response: any): void;
+    sendError(request : Message, error: string): void;
     subscribe(messageType: string, onMessage: (message: Message) => void): Subscription;
 }
