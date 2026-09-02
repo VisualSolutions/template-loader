@@ -13,6 +13,7 @@ type StartupParameters = {
     mframeUrl: string;
     mframeData: string | null;
     autoPlay: boolean;
+    hasSoftKeyboard: boolean;
 }
 
 declare global {
@@ -130,6 +131,7 @@ export class Loader {
             autoPlay: (urlSearchParams.get("autoPlay") || "true").toLowerCase() !== "false",
             platformType: urlSearchParams.get("platformType") || "unknown",
             platformTypeHeadless: false,
+            hasSoftKeyboard: (urlSearchParams.get("hasSoftKeyboard") || "false").toLowerCase() === "true",
         };
     }
 
@@ -164,6 +166,10 @@ export class Loader {
 
     public isHeadlessPlatform():boolean {
         return this.startupParameters.platformTypeHeadless;
+    }
+
+    public hasSoftKeyboard():boolean {
+        return this.startupParameters.hasSoftKeyboard;
     }
 
     public getDuration():number {
