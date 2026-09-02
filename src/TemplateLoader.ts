@@ -21,6 +21,7 @@ declare global {
         LoaderStartupParameters: StartupParameters;
         Player: IPlayer;
         Loader: Loader;
+        messageFromPlayer: (message: Message) => void;
     }
 }
 
@@ -58,9 +59,9 @@ export class Loader {
 
     private started: boolean;
     private componentsPromise: Promise<any>;
-    private componentsPromiseResolve: (data: any) => void;
+    private componentsPromiseResolve!: (data: any) => void;
     private startPromise: Promise<void>;
-    private startPromiseResolve: () => void;
+    private startPromiseResolve!: () => void;
 
     private globalCallbackMethodNameCounter: number;
 
@@ -137,7 +138,7 @@ export class Loader {
 
     private static initializeCommunicator(messageSender: (message: Message) => void): IPlayerCommunicator {
         const communicator: PlayerCommunicator = new PlayerCommunicator(messageSender);
-        window["messageFromPlayer"] = (message: Message) => {
+        window.messageFromPlayer = (message: Message) => {
             communicator.onMessageReceived(message);
         };
         return communicator;
@@ -197,7 +198,7 @@ export class Loader {
         window.Player.mediaFinished(this.startupParameters.playId);
     }
 
-    public getPlayerParameter(key: string): string {
+    public getPlayerParameter(key: string): string | null {
         try {
             return window.Player.getParameter(key);
         } catch (err) {
@@ -215,7 +216,7 @@ export class Loader {
         );
     }
 
-    public openMediaInZone(mediaId: string, zoneId: number, loop: boolean = false, startMode: string = null): void {
+    public openMediaInZone(mediaId: string, zoneId: number, loop: boolean = false, startMode: string | null = null): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.OpenMediaInZone, {mediaId:mediaId, zoneId:zoneId, loop:loop, startMode: startMode});
     }
 
@@ -235,7 +236,7 @@ export class Loader {
         this.executeCommand(LegacyPlaybackCommandsAliases.PlaybackActionInZone, {type:"PLAY_NEXT", zoneId:zoneId});
     }
 
-    public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean, behind: boolean = false, loopingMediaId: string = null): void {
+    public createCustomZone(zoneName: string, left: number, top: number, width: number, height: number, persistent: boolean, behind: boolean = false, loopingMediaId: string | null = null): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.CreateCustomZone, {
             zoneName:zoneName, 
             coordinates:{left:left, top:top, width:width, height:height},
@@ -249,7 +250,7 @@ export class Loader {
         this.executeCommand(LegacyPlaybackCommandsAliases.DeleteCustomZone, {zoneName:zoneName});
     }
 
-    public openMediaInCustomZone(mediaId: string, zoneName: string, loop: boolean = false, startMode: string = null): void {
+    public openMediaInCustomZone(mediaId: string, zoneName: string, loop: boolean = false, startMode: string | null = null): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.OpenMediaInZone,
                 {mediaId:mediaId, zoneName:zoneName, loop:loop, startMode: startMode});
     }
@@ -278,7 +279,7 @@ export class Loader {
         this.executeCommand(LegacyPlaybackCommandsAliases.OpenHomeApp, {});
     }
 
-    public openVodApp(initialFolderIdentifier: string = null, allowUpNavigationFromInitialFolder: boolean = false): void {
+    public openVodApp(initialFolderIdentifier: string | null = null, allowUpNavigationFromInitialFolder: boolean = false): void {
         this.executeCommand(
             LegacyPlaybackCommandsAliases.OpenVodApp, 
             {
@@ -300,22 +301,22 @@ export class Loader {
         this.executeCommand(LegacyPlaybackCommandsAliases.OpenApp, {appId:appId});
     }
 
-    public getMusicStreamTracks(callbackFunction): void {
+    public getMusicStreamTracks(callbackFunction: Function): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.PlaylistDataRequest,
             {dataType: "MUSIC_TRACKS_LIST", responseCallbackMethod: callbackFunction.name});
     }
 
-    public getActiveMusicPlaylistDataAndTracks(callbackFunction): void {
+    public getActiveMusicPlaylistDataAndTracks(callbackFunction: Function): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.PlaylistDataRequest,
             {dataType: "ACTIVE_MUSIC_PLAYLIST_DATA_AND_TRACKS", responseCallbackMethod: callbackFunction.name});
     }
 
-    public getActiveMusicPlaylistData(callbackFunction): void {
+    public getActiveMusicPlaylistData(callbackFunction: Function): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.PlaylistDataRequest,
             {dataType: "ACTIVE_MUSIC_PLAYLIST_DATA", responseCallbackMethod: callbackFunction.name});
     }
 
-    public getPlaylistContainerItems(playlistId: number, callbackFunction): void {
+    public getPlaylistContainerItems(playlistId: number, callbackFunction: Function): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.PlaylistDataRequest,
             {dataType: "PLAYLIST_CONTAINER_ITEMS", referenceItem: playlistId, responseCallbackMethod: callbackFunction.name});
     }
@@ -325,12 +326,12 @@ export class Loader {
             {action: "VOTE", referenceItem: id});
     }
 
-    public getVotedTracks(callbackFunction): void {
+    public getVotedTracks(callbackFunction: Function): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.VotingPlaylistRequest,
             {action: "GET_VOTED_ITEMS", responseCallbackMethod: callbackFunction.name});
     }
 
-    public addPlaybackListener(callbackFunction): void {
+    public addPlaybackListener(callbackFunction: Function): void {
         try {
             window.Player.addPlaybackListener(this.startupParameters.playId, callbackFunction.name);
         } catch (err) {
@@ -338,12 +339,12 @@ export class Loader {
         }
     }
 
-    public addPlaylistUpdateListener(callbackFunction): void {
+    public addPlaylistUpdateListener(callbackFunction: Function): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.RegisterNotifications,
                 {notificationType:"PLAYBACK_STREAM_UPDATED", callbackMethod:callbackFunction.name});
     }
 
-    public addActiveMusicPlaylistChangeListener(callbackFunction): void {
+    public addActiveMusicPlaylistChangeListener(callbackFunction: Function): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.RegisterNotifications,
                 {notificationType:"ACTIVE_MUSIC_PLAYLIST_CHANGED", callbackMethod:callbackFunction.name});
     }
@@ -353,7 +354,7 @@ export class Loader {
             {clientId:clientId, channelName:channelName, payload:payload});
     }
 
-    public joinChannel(clientId: string, channelName: string, callbackFunction): void {
+    public joinChannel(clientId: string, channelName: string, callbackFunction: Function): void {
         this.executeCommand(LegacyPlaybackCommandsAliases.JoinChannel,
             {clientId:clientId, channelName:channelName, callbackMethod:callbackFunction.name});
     }
@@ -362,7 +363,7 @@ export class Loader {
         return this.sendSerialMessageToTargetDevice(null, baudRate, dataType, data, ignoreResponse);
     }
 
-    public sendSerialMessageToTargetDevice(targetProductId: string, baudRate: number, dataType: string, data: string, ignoreResponse: boolean = false): Promise<string> {
+    public sendSerialMessageToTargetDevice(targetProductId: string | null, baudRate: number, dataType: string, data: string, ignoreResponse: boolean = false): Promise<string> {
         return this.executeCommandReturnPromise(
             LegacyPlaybackCommandsAliases.SendSerialMessage,
             {
@@ -377,11 +378,11 @@ export class Loader {
         );
     }
 
-    public receiveSerialMessagesFromConnectedDevice(baudRate: number, dataType: string, retryOnError: boolean, callbackFunction, errorCallbackFunction): void {
+    public receiveSerialMessagesFromConnectedDevice(baudRate: number, dataType: string, retryOnError: boolean, callbackFunction: Function, errorCallbackFunction: Function): void {
         this.receiveSerialMessagesFromTargetDevice(null, baudRate, dataType, retryOnError, callbackFunction, errorCallbackFunction);
     }
 
-    public receiveSerialMessagesFromTargetDevice(targetProductId: string, baudRate: number, dataType: string, retryOnError: boolean, callbackFunction, errorCallbackFunction): void {
+    public receiveSerialMessagesFromTargetDevice(targetProductId: string | null, baudRate: number, dataType: string, retryOnError: boolean, callbackFunction: Function, errorCallbackFunction: Function): void {
         this.executeCommand(
             LegacyPlaybackCommandsAliases.ReceiveSerialMessages,
             {
@@ -441,7 +442,7 @@ export class Loader {
         );
     }
 
-    public receiveDatagramMessages(multicastAddress: string, port: number, dataType: string, callbackFunction, errorCallbackFunction): void {
+    public receiveDatagramMessages(multicastAddress: string, port: number, dataType: string, callbackFunction: Function, errorCallbackFunction: Function): void {
         this.executeCommand(
             "DATAGRAM_RECEIVE",
             {
@@ -471,8 +472,8 @@ export class Loader {
     }
 
     public executeCommandReturnPromise(commandName: string, commandParams: any): Promise<any> {
-        const successMethodName = this.getNextGlobalCallbackMethodName();
-        const errorMethodName = this.getNextGlobalCallbackMethodName();
+        const successMethodName: string = this.getNextGlobalCallbackMethodName();
+        const errorMethodName: string = this.getNextGlobalCallbackMethodName();
         const finalPlayId = this.startupParameters.playId
         return new Promise<any>(function(resolve, reject) {
             const clearData = function() {
@@ -480,12 +481,12 @@ export class Loader {
                 delete window[errorMethodName];
             }
 
-            window[successMethodName] = function(response) {
+            window[successMethodName] = function(response: any) {
                 clearData();
                 resolve(response);
             };
             
-            window[errorMethodName] = function(errorMessage) {
+            window[errorMethodName] = function(errorMessage: string) {
                 clearData();
                 reject(new Error(errorMessage));
             };
